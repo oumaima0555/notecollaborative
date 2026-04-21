@@ -1,0 +1,13 @@
+<h1>Liste des notes</h1>
+
+<a href="{% url 'note_create' %}">Créer une note</a>
+
+<ul>
+    {% for note in notes %}
+        <li>
+            <a href="{% url 'note_detail' note.pk %}">{{ note.titre }}</a>
+        </li>
+    {% empty %}
+        <li>Aucune note disponible.</li>
+    {% endfor %}
+</ul>

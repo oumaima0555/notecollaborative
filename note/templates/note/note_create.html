@@ -1,0 +1,16 @@
+<h1>Créer une note</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="titre">Titre :</label>
+    <input type="text" name="titre" id="titre">
+
+    <br><br>
+
+    <label for="contenu">Contenu :</label>
+    <textarea name="contenu" id="contenu"></textarea>
+
+    <br><br>
+
+    <button type="submit">Enregistrer</button>
+</form>
