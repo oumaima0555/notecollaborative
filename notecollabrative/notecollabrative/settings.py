@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'tag',
     'note',
     'utilisateur',
+    'note',
+    'tag',
+    'commentaire',
+    'notification',
 ]
 
 MIDDLEWARE = [
