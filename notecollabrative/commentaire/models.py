@@ -9,7 +9,7 @@ class Commentaire(models.Model):
     utilisateur=models.ForeignKey(Utilisateur,on_delete=models.CASCADE,related_name='commentaires')
     
     # la fonction d'ajouter commentaire
-    def __init__(self, utilisateur,contenu_com, *args, **kwargs):
+    def __init__(self, utilisateur,contenu_com):
         super().__init__()
         self.utilisateur = utilisateur;
         self.contenu_com = contenu_com;
