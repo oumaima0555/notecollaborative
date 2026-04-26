@@ -1,5 +1,8 @@
+﻿# -*- coding: utf-8 -*-
 from django.db import models
-from note.models import Not
+from django.utils import timezone
+from note.models import Note
+
 # Create your models here.
 
 class Tag(models.Model):
@@ -11,8 +14,8 @@ class Tag(models.Model):
     
 
 class note_tag(models.Model):
-    note = models.ForeignKey(Note, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, null=True, blank=True)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True, blank=True)
     date_ajout = models.DateTimeField(default=timezone.now)
     
     class Meta:

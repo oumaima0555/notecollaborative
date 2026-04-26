@@ -1,13 +1,14 @@
 from django.db import models
-from utilisateur.models import Utilisateur
+from django.utils import timezone
+
 # Create your models here.
 class Notification(models.Model):
 
     id_notification=models.AutoField(primary_key=True)
-    messsage=models.CharField(max_length=255)
-    date=models.DateTimeField(auto_now_add=True)
+    messsage=models.CharField(max_length=255, blank=True, default='')
+    date=models.DateTimeField(default=timezone.now, null=True, blank=True)
     lu=models.BooleanField(default=False)
-    utilisateur=models.ForeignKey(Utilisateur,on_delete=models.CASCADE,related_name='notifications')
+    utilisateur=models.ForeignKey('utilisateur.Utilisateur', on_delete=models.CASCADE, related_name='notifications', null=True, blank=True)
     def envoyer_notification(self,utilisateur,message):
         notification=Notification(messsage=message)
         notification.save()

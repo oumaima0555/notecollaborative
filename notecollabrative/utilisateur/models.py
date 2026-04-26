@@ -1,7 +1,6 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser,Group,Permission    
-from commentaire.models import Commentaire
 #voici les models 
 
 class Utilisateur(AbstractUser):
@@ -30,6 +29,7 @@ class Utilisateur(AbstractUser):
         )
     
     def add_commentaire(self, contenu_com):
+        from commentaire.models import Commentaire
         Commentaire.__init__(self, self, contenu_com)
 
     def modifier_commentaire(self, commentaire, nouveau_contenu):

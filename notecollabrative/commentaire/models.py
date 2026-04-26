@@ -1,12 +1,13 @@
 from django.db import models
-from utilisateur.models import Utilisateur
+from django.utils import timezone
+
 # Create your models here.
 class Commentaire(models.Model):
 
     id_contenu=models.BigAutoField(primary_key=True)
-    contenu_com=models.TextField()
-    date_com=models.DateField(auto_now_add=True)
-    utilisateur=models.ForeignKey(Utilisateur,on_delete=models.CASCADE,related_name='commentaires')
+    contenu_com=models.TextField(blank=True, default='')
+    date_com=models.DateField(default=timezone.now, null=True, blank=True)
+    utilisateur=models.ForeignKey('utilisateur.Utilisateur', on_delete=models.CASCADE, related_name='commentaires', null=True, blank=True)
     
     # la fonction d'ajouter commentaire
     def __init__(self, utilisateur,contenu_com):

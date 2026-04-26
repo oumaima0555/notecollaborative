@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des notes</title>
+</head>
+<body>
+    Liste des notes :
+    <ul>
+        {% for note in notes %}
+        <a href="{% url 'note_detail' note.id %}"></a>
+            <li>{{ note.titre }}</li>
+        {% endfor %}    
+</body>
+</html>

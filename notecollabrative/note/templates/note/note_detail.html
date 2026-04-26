@@ -1,0 +1,46 @@
+<h1>{{ note.titre }}</h1>
+
+<p>{{ note.contenu }}</p>
+
+<p>Créée le : {{ note.date_creation }}</p>
+<p>Modifiée le : {{ note.date_modification }}</p>
+
+<h3>Catégorie</h3>
+{% if note.categorie %}
+    <p>{{ note.categorie.nom }}</p>
+{% else %}
+    <p>Aucune catégorie</p>
+{% endif %}
+
+<h3>Médias</h3>
+<ul>
+    {% for media in note.medias.all %}
+        <li>
+            {{ media.type }}
+            {% if media.url %}
+                - <a href="{{ media.url }}">{{ media.url }}</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Aucun média</li>
+    {% endfor %}
+</ul>
+
+<h3>Partages</h3>
+<ul>
+    {% for partage in note.partages.all %}
+        <li>{{ partage.permission }}</li>
+    {% empty %}
+        <li>Aucun partage</li>
+    {% endfor %}
+</ul>
+
+<h3>Versions</h3>
+<ul>
+    {% for version in note.versions.all %}
+        <li>{{ version.contenu }} - {{ version.date_modification }}</li>
+    {% empty %}
+        <li>Aucune version</li>
+    {% endfor %}
+    <a href="{% url 'version' note.id %}">Voir les versions</a>
+</ul>
