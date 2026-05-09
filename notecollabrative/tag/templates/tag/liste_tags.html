@@ -1,0 +1,9 @@
+<h1>Liste des Tags</h1>
+
+<ul>
+    {% for tag in tags %}
+        <li>{{ tag.nom_tag }}</li>
+    {% empty %}
+        <li>Aucun tag</li>
+    {% endfor %}
+</ul>
