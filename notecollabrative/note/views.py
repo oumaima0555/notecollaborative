@@ -10,7 +10,7 @@ from django.utils.html import strip_tags
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import re
-
+from tag.models import Tag
 
 User = get_user_model()
 
@@ -22,9 +22,11 @@ def note_liste(request):
 def recherche_notes(request):
     titre = request.GET.get('titre', '')
     categorie_id = request.GET.get('categorie', '')
+    tag_id = request.GET.get('tag', '')
 
     notes = Note.objects.all().order_by('-date_creation')
     categories = Categorie.objects.all()
+    tags = Tag.objects.all()
 
     if titre:
         notes = notes.filter(titre__icontains=titre)
@@ -32,11 +34,16 @@ def recherche_notes(request):
     if categorie_id:
         notes = notes.filter(categorie_id=categorie_id)
 
+    if tag_id:
+        notes = notes.filter(tags__id_tag=tag_id)
+
     return render(request, 'note/recherche_notes.html', {
         'notes': notes,
         'categories': categories,
+        'tags': tags,
         'titre': titre,
         'categorie_id': categorie_id,
+        'tag_id': tag_id,
     })
 
 def exporter_markdown(request, note_id):
@@ -393,4 +400,33 @@ def categorie_ajouter(request):
 
     return render(request, 'note/categorie_form.html', {
         'form': form
+    })
+
+def categorie_modifier(request, id):
+    categorie = get_object_or_404(Categorie, id=id)
+
+    if request.method == 'POST':
+        form = CategorieForm(request.POST, instance=categorie)
+
+        if form.is_valid():
+            form.save()
+            return redirect('categorie_liste')
+    else:
+        form = CategorieForm(instance=categorie)
+
+    return render(request, 'note/categorie_form.html', {
+        'form': form,
+        'titre_page': 'Modifier une catégorie'
+    })
+
+
+def categorie_supprimer(request, id):
+    categorie = get_object_or_404(Categorie, id=id)
+
+    if request.method == 'POST':
+        categorie.delete()
+        return redirect('categorie_liste')
+
+    return render(request, 'note/categorie_supprimer.html', {
+        'categorie': categorie
     })

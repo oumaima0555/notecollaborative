@@ -23,6 +23,12 @@ class Note(models.Model):
         null=True,
         blank=True
     )
+    tags = models.ManyToManyField(
+    'tag.Tag',
+    through='tag.note_tag',
+    blank=True,
+    related_name='notes'
+   )
 
     utilisateur = models.ForeignKey(
         settings.AUTH_USER_MODEL,

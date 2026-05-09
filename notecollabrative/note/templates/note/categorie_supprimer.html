@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer catégorie</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="note-item">
+        <h1>Supprimer la catégorie</h1>
+
+        <p>
+            Voulez-vous vraiment supprimer la catégorie :
+            <strong>{{ categorie.nom }}</strong> ?
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger">
+                Oui, supprimer
+            </button>
+
+            <a href="{% url 'categorie_liste' %}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -23,16 +23,35 @@
     </div>
 
     <div class="note-list">
-        {% for categorie in categories %}
-            <div class="note-item">
-                <div class="note-title">{{ categorie.nom }}</div>
-                <div class="note-content">{{ categorie.description }}</div>
-            </div>
-        {% empty %}
-            <div class="note-item">
-                <p>Aucune catégorie.</p>
-            </div>
-        {% endfor %}
+       {% for categorie in categories %}
+    <div class="note-item categorie-row">
+
+        <div>
+            <div class="note-title">{{ categorie.nom }}</div>
+            <div class="note-content">{{ categorie.description }}</div>
+        </div>
+
+        <div class="categorie-actions">
+            <a href="{% url 'categorie_modifier' categorie.id %}"
+               class="icon-link edit-icon"
+               title="Modifier la catégorie">
+                ✏️
+            </a>
+
+            <a href="{% url 'categorie_supprimer' categorie.id %}"
+               class="icon-link delete-icon"
+               title="Supprimer la catégorie">
+                🗑️
+            </a>
+        </div>
+
+    </div>
+{% empty %}
+    <div class="note-item">
+        <p>Aucune catégorie.</p>
+    </div>
+{% endfor %}
+
     </div>
 
 </div>

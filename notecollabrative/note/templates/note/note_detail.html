@@ -26,7 +26,14 @@
                 aucune
             {% endif %}
         </p>
-
+        <p class="note-meta">
+            <strong>Tags :</strong>
+            {% for nt in note.note_tag_set.all %}
+               <span class="badge">{{ nt.tag.nom_tag }}</span>
+               {% empty %}
+               aucun tag
+               {% endfor %}
+</p>
         <p class="note-meta">
             <strong>Date création :</strong>
             {{ note.date_creation|date:"d/m/Y H:i" }}
@@ -44,7 +51,6 @@
             <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
             <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
             <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
-            <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">Ajouter commentaire</a>
             <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
             <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
             <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
@@ -76,7 +82,32 @@
         <p>Aucun collaborateur pour cette note.</p>
     {% endif %}
 </div>
+<!-- code oumaima -->
+<div class="note-item">
+    <h2>Commentaires</h2>
 
+    {% for commentaire in note.commentaires.all %}
+        <div class="version-box">
+            <strong>
+                {{ commentaire.utilisateur }}
+            </strong>
+
+            <p>
+                {{ commentaire.contenu_com }}
+            </p>
+
+            <small class="note-meta">
+                {{ commentaire.date_com|date:"d/m/Y" }}
+            </small>
+        </div>
+    {% empty %}
+        <p>Aucun commentaire</p>
+    {% endfor %}
+
+    <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">
+        Ajouter commentaire
+    </a>
+</div>
 </div>
 
 </body>

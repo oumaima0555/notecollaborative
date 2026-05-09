@@ -44,6 +44,24 @@
             </div>
 
             <br>
+            <div>
+    <label>Tag :</label>
+    <select name="tag" class="form-control">
+        <option value="">Tous les tags</option>
+
+        {% for tag in tags %}
+            <option value="{{ tag.id_tag }}"
+                {% if tag_id == tag.id_tag|stringformat:"s" %}
+                    selected
+                {% endif %}
+            >
+                {{ tag.nom_tag }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<br>
 
             <button type="submit" class="btn btn-primary">Rechercher</button>
             <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>

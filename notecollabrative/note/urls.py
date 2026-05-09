@@ -20,4 +20,6 @@ urlpatterns = [
 
     path('categories/', views.categorie_liste, name='categorie_liste'),
     path('categories/ajouter/', views.categorie_ajouter, name='categorie_ajouter'),
+    path('categories/<int:id>/modifier/', views.categorie_modifier, name='categorie_modifier'),
+    path('categories/<int:id>/supprimer/', views.categorie_supprimer, name='categorie_supprimer'),
 ]

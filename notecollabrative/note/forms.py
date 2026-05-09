@@ -16,7 +16,7 @@ class NoteForm(forms.ModelForm):
 
     class Meta:
         model = Note
-        fields = ['titre', 'contenu', 'categorie']
+        fields = ['titre', 'contenu', 'categorie','tags']
 
         widgets = {
             'titre': forms.TextInput(attrs={

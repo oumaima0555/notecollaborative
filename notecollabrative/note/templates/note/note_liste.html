@@ -21,7 +21,8 @@
         <a href="{% url 'categorie_liste' %}" class="btn btn-secondary">
             Catégories
         </a>
-         <a href="{% url 'recherche_notes' %}" class="btn btn-primary"> Recherche avancée</a>
+        <a href="{% url 'tags:liste_tags' %}" class="btn btn-secondary">Tags</a>
+        <a href="{% url 'recherche_notes' %}" class="btn btn-primary"> Recherche</a>
     </div>
 
     <div class="note-list">
@@ -67,11 +68,6 @@
                     <a href="{% url 'version' note.id %}" class="btn btn-secondary">
                         Historique
                     </a>
-
-                    <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
-                        Ajouter média
-                    </a>
-
                     <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">
                         Partager
                     </a>
