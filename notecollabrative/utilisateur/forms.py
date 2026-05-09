@@ -1,17 +1,50 @@
 from django import forms
-from .models import Administrateur,Collaborateur
+from .models import Administrateur, Collaborateur
+
 
 class LoginForm(forms.ModelForm):
-    email=forms.EmailField(widget=forms.EmailInput(attrs={
-        'class':'input',
-        'placeholder':'entrer email'
-    }))
 
-    password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class':'input',
-        'placeholder':'entrer password'
-    }))
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'input',
+            'placeholder': 'entrer email'
+        })
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'entrer password'
+        })
+    )
 
     class Meta:
-        model=Administrateur
-        fields= ['email','password']
+        model = Administrateur
+        fields = ['email', 'password']
+
+
+# ==========================
+# FORMULAIRE INSCRIPTION
+# ==========================
+
+class RegisterForm(forms.ModelForm):
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'entrer password'
+        })
+    )
+
+    class Meta:
+
+        model = Collaborateur
+
+        fields = [
+            'username',
+            'email',
+            'nom',
+            'prenom',
+            'num',
+            'password'
+        ]
