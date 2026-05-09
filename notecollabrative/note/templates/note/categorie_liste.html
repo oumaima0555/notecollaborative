@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Catégories</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Liste des catégories</h1>
+
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'categorie_ajouter' %}" class="btn btn-success">
+            Ajouter catégorie
+        </a>
+
+        <a href="{% url 'note_liste' %}" class="btn btn-secondary">
+            Retour aux notes
+        </a>
+    </div>
+
+    <div class="note-list">
+        {% for categorie in categories %}
+            <div class="note-item">
+                <div class="note-title">{{ categorie.nom }}</div>
+                <div class="note-content">{{ categorie.description }}</div>
+            </div>
+        {% empty %}
+            <div class="note-item">
+                <p>Aucune catégorie.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

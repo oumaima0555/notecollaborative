@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Partager note</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<h1>Partager la note : {{ note.titre }}</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        <label>Collaborateur :</label>
+        {{ form.collaborateur }}
+    </div>
+
+    <br>
+
+    <div>
+        <label>Permission :</label>
+        {{ form.permission }}
+    </div>
+
+    <br>
+
+    <button type="submit">Partager</button>
+</form>
+
+<br>
+
+<a href="{% url 'note_detail' note.id %}">Retour</a>
+
+</body>
+</html>

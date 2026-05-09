@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Médias de la note</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Médias de la note : {{ note.titre }}</h1>
+
+    <div class="actions">
+        <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
+            Ajouter média
+        </a>
+
+        <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+            Retour à la note
+        </a>
+    </div>
+
+    <br>
+<h2>Médias intégrés dans la note</h2>
+
+{% if liens_internes or medias_internes %}
+
+    {% for lien in liens_internes %}
+        <div class="note-item">
+            <p>
+                <strong>Type :</strong> lien intégré
+            </p>
+
+            <p>
+                <strong>Lien :</strong>
+                <a href="{{ lien }}" target="_blank">{{ lien }}</a>
+            </p>
+        </div>
+    {% endfor %}
+
+    {% for media in medias_internes %}
+        <div class="note-item">
+            <p>
+                <strong>Type :</strong> {{ media.type }}
+            </p>
+
+            {% if media.image %}
+                <p>
+                    <strong>Image :</strong><br>
+                    <img src="{{ media.image.url }}" alt="image média" style="max-width: 350px; border-radius: 10px;">
+                </p>
+            {% endif %}
+
+            {% if media.url %}
+                <p>
+                    <strong>Lien :</strong>
+                    <a href="{{ media.url }}" target="_blank">{{ media.url }}</a>
+                </p>
+            {% endif %}
+
+            <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
+                Supprimer média
+            </a>
+        </div>
+    {% endfor %}
+
+{% else %}
+    <div class="note-item">
+        <p>Aucun média intégré dans la note.</p>
+    </div>
+{% endif %}
+
+    <br>
+
+    <h2>Médias supplémentaires</h2>
+
+    {% for media in medias_supplementaires %}
+        <div class="note-item">
+
+            <p>
+                <strong>Type :</strong> {{ media.type }}
+            </p>
+
+            {% if media.url %}
+                <p>
+                    <strong>Lien :</strong>
+                    <a href="{{ media.url }}" target="_blank">{{ media.url }}</a>
+                </p>
+            {% endif %}
+
+            {% if media.image %}
+                <p>
+                    <strong>Image :</strong><br>
+                    <img src="{{ media.image.url }}" alt="image média" style="max-width: 350px; border-radius: 10px;">
+                </p>
+            {% endif %}
+
+            <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
+                Supprimer média
+            </a>
+
+        </div>
+    {% empty %}
+        <div class="note-item">
+            <p>Aucun média supplémentaire pour cette note.</p>
+        </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

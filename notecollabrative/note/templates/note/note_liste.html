@@ -1,16 +1,95 @@
+ {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des notes</title>
+
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
 </head>
 <body>
-    Liste des notes :
-    <ul>
+
+<div class="container">
+
+    <h1>Mes Notes Collaboratives</h1>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{% url 'note_ajouter' %}" class="btn btn-success">
+            Ajouter une note
+        </a>
+
+        <a href="{% url 'categorie_liste' %}" class="btn btn-secondary">
+            Catégories
+        </a>
+         <a href="{% url 'recherche_notes' %}" class="btn btn-primary"> Recherche avancée</a>
+    </div>
+
+    <div class="note-list">
+
         {% for note in notes %}
-        <a href="{% url 'note_detail' note.id %}"></a>
-            <li>{{ note.titre }}</li>
-        {% endfor %}    
+
+            <div class="note-item">
+
+                <div class="note-title">
+                    {{ note.titre }}
+                </div>
+
+                <div class="note-content">
+                    {{ note.contenu|truncatechars:120 }}
+                </div>
+
+                <div class="note-meta">
+                    Créée le : {{ note.date_creation|date:"d/m/Y H:i" }}
+
+                    {% if note.date_modification %}
+                        | Modifiée le : {{ note.date_modification|date:"d/m/Y H:i" }}
+                    {% endif %}
+
+                    {% if note.categorie %}
+                        | Catégorie :
+                        <span class="badge">{{ note.categorie.nom }}</span>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <a href="{% url 'note_detail' note.id %}" class="btn btn-primary">
+                        Voir
+                    </a>
+
+                    <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">
+                        Modifier
+                    </a>
+
+                    <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">
+                        Supprimer
+                    </a>
+
+                    <a href="{% url 'version' note.id %}" class="btn btn-secondary">
+                        Historique
+                    </a>
+
+                    <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
+                        Ajouter média
+                    </a>
+
+                    <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">
+                        Partager
+                    </a>
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="note-item">
+                <p>Aucune note pour le moment.</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
 </body>
 </html>

@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Recherche avancée</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="note-item">
+        <h1>Recherche </h1>
+
+        <form method="GET">
+
+            <div>
+                <label>Titre :</label>
+                <input type="text"
+                       name="titre"
+                       class="form-control"
+                       value="{{ titre }}"
+                       placeholder="Rechercher par titre">
+            </div>
+
+            <br>
+
+            <div>
+                <label>Catégorie :</label>
+                <select name="categorie" class="form-control">
+                    <option value="">Toutes les catégories</option>
+
+                    {% for categorie in categories %}
+                        <option value="{{ categorie.id }}"
+                            {% if categorie_id == categorie.id|stringformat:"s" %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ categorie.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <br>
+
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
+
+        </form>
+    </div>
+
+    <div class="note-item">
+        <h2>Résultats</h2>
+
+        {% for note in notes %}
+            <div class="note-item">
+                <h3>
+                    <a href="{% url 'note_detail' note.id %}">
+                        {{ note.titre }}
+                    </a>
+                </h3>
+
+                <div class="note-content">
+                    {{ note.contenu|safe|truncatechars:150 }}
+                </div>
+
+                <p class="note-meta">
+                    <strong>Catégorie :</strong>
+                    {% if note.categorie %}
+                        <span class="badge">{{ note.categorie.nom }}</span>
+                    {% else %}
+                        aucune
+                    {% endif %}
+                </p>
+
+                <a href="{% url 'note_detail' note.id %}" class="btn btn-primary">
+                    Voir
+                </a>
+            </div>
+        {% empty %}
+            <p>Aucune note trouvée.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

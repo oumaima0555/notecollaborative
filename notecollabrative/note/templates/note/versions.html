@@ -1,24 +1,48 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Historique de la note</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
 </head>
 <body>
-    <h1>Versions de : {{ note.titre }}</h1>
 
-<ul>
+<div class="container">
+
+    <h1>Historique de la note : {{ note.titre }}</h1>
+
+    <div class="actions">
+        <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+            Retour à la note
+        </a>
+
+        <a href="{% url 'note_liste' %}" class="btn btn-secondary">
+            Retour aux notes
+        </a>
+    </div>
+
+    <br>
+
     {% for version in versions %}
-        <li>
-            <strong>{{ version.date_modification }}</strong>
-            <p>{{ version.contenu }}</p>
-        </li>
-    {% empty %}
-        <li>Aucune version disponible.</li>
-    {% endfor %}
-</ul>
+        <div class="note-item">
 
-<a href="{% url 'note_detail' note.id %}">Retour à la note</a>
+            <h2>
+                Version du {{ version.date_modification|date:"d/m/Y H:i" }}
+            </h2>
+
+            <div class="note-content">
+                {{ version.contenu|safe }}
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="note-item">
+            <p>Aucune version trouvée pour cette note.</p>
+        </div>
+    {% endfor %}
+
+</div>
+
 </body>
 </html>

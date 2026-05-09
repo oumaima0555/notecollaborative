@@ -1,46 +1,82 @@
-<h1>{{ note.titre }}</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail note</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
 
-<p>{{ note.contenu }}</p>
+<div class="container">
 
-<p>Créée le : {{ note.date_creation }}</p>
-<p>Modifiée le : {{ note.date_modification }}</p>
+    <div class="note-item">
 
-<h3>Catégorie</h3>
-{% if note.categorie %}
-    <p>{{ note.categorie.nom }}</p>
-{% else %}
-    <p>Aucune catégorie</p>
-{% endif %}
+        <h1>{{ note.titre }}</h1>
 
-<h3>Médias</h3>
-<ul>
-    {% for media in note.medias.all %}
-        <li>
-            {{ media.type }}
-            {% if media.url %}
-                - <a href="{{ media.url }}">{{ media.url }}</a>
+       <div class="note-content">
+            {{ note.contenu|safe }}
+       </div>
+       
+        <p class="note-meta">
+            <strong>Catégorie :</strong>
+            {% if note.categorie %}
+                <span class="badge">{{ note.categorie.nom }}</span>
+            {% else %}
+                aucune
             {% endif %}
-        </li>
-    {% empty %}
-        <li>Aucun média</li>
-    {% endfor %}
-</ul>
+        </p>
 
-<h3>Partages</h3>
-<ul>
-    {% for partage in note.partages.all %}
-        <li>{{ partage.permission }}</li>
-    {% empty %}
-        <li>Aucun partage</li>
-    {% endfor %}
-</ul>
+        <p class="note-meta">
+            <strong>Date création :</strong>
+            {{ note.date_creation|date:"d/m/Y H:i" }}
+        </p>
 
-<h3>Versions</h3>
-<ul>
-    {% for version in note.versions.all %}
-        <li>{{ version.contenu }} - {{ version.date_modification }}</li>
-    {% empty %}
-        <li>Aucune version</li>
-    {% endfor %}
-    <a href="{% url 'version' note.id %}">Voir les versions</a>
-</ul>
+        <p class="note-meta">
+            <strong>Date modification :</strong>
+            {{ note.date_modification|date:"d/m/Y H:i" }}
+        </p>
+
+        <div class="actions">
+            <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">Modifier</a>
+            <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">Supprimer</a>
+            <a href="{% url 'version' note.id %}" class="btn btn-secondary">Voir versions</a>
+            <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
+            <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
+            <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
+            <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
+            <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
+            <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
+        </div>
+
+    </div>
+     
+  
+
+
+<div class="note-item">
+    <h2>Collaborateurs</h2>
+
+    {% if partages %}
+        <ul>
+            {% for partage in partages %}
+                <li>
+                    <strong>{{ partage.collaborateur }}</strong>
+                    -
+                    <span class="badge">{{ partage.permission }}</span>
+
+                    <a href="{% url 'partage_modifier' partage.id %}" class="btn btn-warning">
+                        Modifier permission
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun collaborateur pour cette note.</p>
+    {% endif %}
+</div>
+
+</div>
+
+</body>
+</html>

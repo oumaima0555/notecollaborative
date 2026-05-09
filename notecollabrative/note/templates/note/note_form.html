@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titre_page }}</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="note-item">
+        <h1>{{ titre_page }}</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div>
+                <label>Titre :</label>
+                {{ form.titre }}
+            </div>
+
+            <br>
+
+            <div>
+                <label>Catégorie :</label>
+                {{ form.categorie }}
+            </div>
+
+            <br>
+
+            <div>
+    <label>Contenu :</label>
+
+    <div class="actions" style="margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary" onclick="ajouterLien()">
+            Insérer lien
+        </button>
+
+        <button type="button" class="btn btn-success" onclick="ajouterImageMarqueur()">
+            Insérer emplacement image
+        </button>
+    </div>
+
+    {{ form.contenu }}
+
+    <p class="note-meta">
+        Pour insérer une image depuis le PC : clique sur “Insérer emplacement image”, puis choisis une image en bas.
+    </p>
+</div>
+
+<br>
+
+<div>
+    <label>Image depuis votre PC :</label>
+    {{ form.image_note }}
+</div>
+
+            <br>
+
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
+        </form>
+    </div>
+
+</div>
+<script>
+function insererDansTextarea(texte) {
+    let textarea = document.getElementById("contenu-field");
+
+    let debut = textarea.selectionStart;
+    let fin = textarea.selectionEnd;
+
+    let contenuAvant = textarea.value.substring(0, debut);
+    let contenuApres = textarea.value.substring(fin);
+
+    textarea.value = contenuAvant + texte + contenuApres;
+
+    textarea.focus();
+    textarea.selectionStart = textarea.selectionEnd = debut + texte.length;
+}
+
+function ajouterLien() {
+    let url = prompt("Entrer l'URL du lien :");
+    let texte = prompt("Entrer le texte du lien :");
+
+    if (url && texte) {
+        let lien = '<a href="' + url + '" target="_blank">' + texte + '</a>';
+        insererDansTextarea(lien);
+    }
+}
+
+function ajouterImageMarqueur() {
+    insererDansTextarea('[IMAGE]');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer note</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="note-item" style="text-align:center;">
+        <h1>Supprimer la note</h1>
+
+        <p>Voulez-vous vraiment supprimer la note :</p>
+
+        <h2>{{ note.titre }}</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger">
+                Oui, supprimer
+            </button>
+
+            <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
