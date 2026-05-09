@@ -44,6 +44,7 @@
             <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
             <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
             <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
+            <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">Ajouter commentaire</a>
             <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
             <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
             <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
