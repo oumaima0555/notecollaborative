@@ -22,4 +22,6 @@ urlpatterns = [
     path ('', include('utilisateur.urls')),
     path('admin/', admin.site.urls),
     path('note_liste/', include('note.urls')),
+    path('tags/', include('tag.urls')),
+    path('commentaires/', include('commentaire.urls')),
 ]

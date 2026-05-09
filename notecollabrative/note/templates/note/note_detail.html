@@ -44,3 +44,43 @@
     {% endfor %}
     <a href="{% url 'version' note.id %}">Voir les versions</a>
 </ul>
+
+#oumaima
+<h2>Commentaires</h2>
+
+{% for commentaire in note.commentaires.all %}
+
+    <div>
+
+        <strong>
+            {{ commentaire.utilisateur }}
+        </strong>
+
+        <p>
+            {{ commentaire.contenu }}
+        </p>
+
+        <small>
+            {{ commentaire.date_creation }}
+        </small>
+
+    </div>
+
+{% empty %}
+
+    <p>Aucun commentaire</p>
+
+{% endfor %}
+
+<a href="{% url 'Commentaire:ajouter_commentaire' note.id %}">
+    Ajouter commentaire
+</a>
+
+#oumaima
+<h3>Tags :</h3>
+
+{% for tag in note.tags.all %}
+    <span>{{ tag.nom_tag }}</span>
+{% empty %}
+    <p>Aucun tag</p>
+{% endfor %}

@@ -16,6 +16,9 @@ class Note(models.Model):
     date_creation=models.DateTimeField(auto_now_add=True)
     date_modification=models.DateTimeField(auto_now=True)
     categorie = models.ForeignKey(Categorie, on_delete=models.SET_NULL, null=True,blank=True)
+
+    tag = models.ManyToManyField('tag.Tag', blank=True) #oumaima
+
     def __str__(self):
         return self.titre
 
