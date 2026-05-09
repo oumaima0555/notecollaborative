@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Connexion - Notes App</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            background: linear-gradient(to right, #ffb6c1, #ffc0cb);
+            font-family:"Poppins","Segoe UI",Arial,sans-serif;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .login-card{
+            width:430px;
+            background:white;
+            border-radius:22px;
+            padding:40px;
+            box-shadow:0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        h1{
+            text-align:center;
+            color:#d63384;
+            font-size:52px;
+            font-weight:800;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#777;
+            margin-bottom:35px;
+            font-size:16px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:6px;
+            margin-top:14px;
+            color:#c2185b;
+            font-weight:600;
+            font-size:15px;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:2px solid #ffc0cb;
+            border-radius:12px;
+            outline:none;
+            font-size:15px;
+            box-sizing:border-box;
+            margin-bottom:18px;
+            transition:.2s;
+        }
+
+        input:focus{
+            border-color:#ff69b4;
+            box-shadow:0 0 0 3px rgba(255,105,180,.15);
+        }
+
+        button{
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            background:#ff69b4;
+            color:white;
+            font-size:17px;
+            font-weight:700;
+            cursor:pointer;
+            transition:.2s;
+            margin-top:10px;
+        }
+
+        button:hover{
+            background:#ff4fa3;
+            transform:translateY(-1px);
+        }
+
+        .footer{
+            text-align:center;
+            margin-top:22px;
+            color:#777;
+            font-size:15px;
+        }
+
+        .footer a{
+            color:#ff69b4;
+            text-decoration:none;
+            font-weight:700;
+        }
+
+        .footer a:hover{
+            text-decoration:underline;
+        }
+
+        .errorlist{
+            color:red;
+            list-style:none;
+            padding:0;
+            margin-bottom:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <h1>Notes App</h1>
+
+        <p class="subtitle">
+            Connexion à votre espace collaboratif
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label for="username">
+                Nom d'utilisateur
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="Entrer votre username"
+                required
+            >
+
+            <label for="password">
+                Mot de passe
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Entrer votre mot de passe"
+                required
+            >
+
+            <button type="submit">
+                Se connecter
+            </button>
+
+        </form>
+
+        <div class="footer">
+
+            <p>
+                Pas de compte ?
+                <a href="{% url 'register' %}">
+                    S'inscrire
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
