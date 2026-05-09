@@ -1,0 +1,13 @@
+<h1>Supprimer Tag</h1>
+
+<p>Voulez-vous supprimer {{ tag.nom_tag }} ?</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Oui supprimer
+    </button>
+
+</form>
