@@ -24,4 +24,5 @@ urlpatterns = [
     path('note_liste/', include('note.urls')),
     path('tags/', include('tag.urls')),
     path('commentaires/', include('commentaire.urls')),
+    path('notifications/', include('notification.urls')),
 ]

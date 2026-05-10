@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications - Notes App</title>
+
+    <!-- ICONS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Poppins",sans-serif;
+        }
+
+        body{
+            background:linear-gradient(135deg,#fff0f6,#ffe3f1);
+            padding:40px;
+            min-height:100vh;
+        }
+
+        .container{
+            max-width:1000px;
+            margin:auto;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:40px;
+        }
+
+        .title{
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+
+        .title i{
+            font-size:38px;
+            color:#ff4fa3;
+        }
+
+        .title h1{
+            font-size:42px;
+            color:#d63384;
+            font-weight:800;
+        }
+
+        .back-btn{
+            text-decoration:none;
+            background:#ff4fa3;
+            color:white;
+            padding:12px 22px;
+            border-radius:12px;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .back-btn:hover{
+            background:#e63c92;
+        }
+
+        .notification-card{
+            background:white;
+            border-radius:22px;
+            padding:22px;
+            margin-bottom:22px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            border-left:7px solid #ff4fa3;
+
+            box-shadow:0 8px 20px rgba(0,0,0,0.08);
+
+            transition:0.3s;
+        }
+
+        .notification-card:hover{
+            transform:translateY(-4px);
+        }
+
+        .left{
+            display:flex;
+            align-items:center;
+            gap:18px;
+        }
+
+        .icon{
+            width:65px;
+            height:65px;
+            border-radius:50%;
+            background:#ffe3f1;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .icon i{
+            color:#ff4fa3;
+            font-size:25px;
+        }
+
+        .content h3{
+            color:#d63384;
+            margin-bottom:6px;
+            font-size:22px;
+        }
+
+        .content p{
+            color:#666;
+            font-size:16px;
+        }
+
+        .date{
+            color:#999;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        .empty{
+            text-align:center;
+            margin-top:100px;
+            color:#999;
+        }
+
+        .empty i{
+            font-size:80px;
+            color:#ffb3d9;
+            margin-bottom:20px;
+        }
+
+        .empty h2{
+            font-size:30px;
+            margin-bottom:10px;
+        }
+
+        .empty p{
+            font-size:16px;
+        }
+
+        @media(max-width:768px){
+
+            .notification-card{
+                flex-direction:column;
+                align-items:flex-start;
+                gap:15px;
+            }
+
+            .header{
+                flex-direction:column;
+                gap:20px;
+            }
+
+            .title h1{
+                font-size:34px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div class="title">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <h1>Notifications</h1>
+
+            </div>
+
+            <a href="{% url 'home' %}" class="back-btn">
+
+                <i class="fa-solid fa-house"></i>
+
+                Retour Home
+
+            </a>
+
+        </div>
+
+        <!-- NOTIFICATIONS -->
+
+        {% for n in notifications %}
+
+        <div class="notification-card">
+
+            <div class="left">
+
+                <div class="icon">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                </div>
+
+                <div class="content">
+
+                    <h3>Nouvelle notification</h3>
+
+                    <p>{{ n.messsage }}</p>
+
+                </div>
+
+            </div>
+
+            <div class="date">
+
+                <i class="fa-regular fa-clock"></i>
+
+                {{ n.date }}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+
+            <i class="fa-regular fa-bell-slash"></i>
+
+            <h2>Aucune notification</h2>
+
+            <p>Vous n'avez aucune notification pour le moment.</p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+
+</html>

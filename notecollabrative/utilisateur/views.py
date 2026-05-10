@@ -7,7 +7,7 @@ from .forms import RegisterForm
 from .models import Utilisateur, Administrateur, Collaborateur
 
 
-@login_required
+@login_required(login_url='login')
 def home(request):
 
     return render(

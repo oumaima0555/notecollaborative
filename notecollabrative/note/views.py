@@ -12,6 +12,9 @@ import re
 from tag.models import Tag
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+#aicha
+from notification.models import Notification
+ 
 
 
 User = get_user_model()
@@ -207,6 +210,11 @@ def note_ajouter(request):
                 note=note,
                 contenu=note.contenu
             )
+            #aicha
+            Notification.objects.create(
+               utilisateur=request.user,
+             messsage="Aicha a ajouté une nouvelle note"
+             )
 
             return redirect('note_liste')
     else:
@@ -268,6 +276,11 @@ def note_modifier(request, id):
                     note=note,
                     contenu=note.contenu
                 )
+                #aicha
+                Notification.objects.create(
+    utilisateur=request.user,
+    messsage="Aicha a modifié une note"
+)
 
             return redirect('note_detail', id=note.id)
     else:
@@ -290,6 +303,11 @@ def note_supprimer(request, id):
 
     if request.method == 'POST':
         note.delete()
+        #aicha
+        Notification.objects.create(
+    utilisateur=request.user,
+    messsage="Aicha a supprimé une note"
+)
         return redirect('note_liste')
 
     return render(request, 'note/note_supprimer.html', {
@@ -431,6 +449,11 @@ def partage_ajouter(request, note_id):
                 partage = form.save(commit=False)
                 partage.note = note
                 partage.save()
+                #aicha
+                Notification.objects.create(
+    utilisateur=collaborateur,
+    messsage=f"Aicha a partagé une note avec vous : {note.titre}"
+)
 
                 messages.success(request, "La note a été partagée avec succès.")
                 return redirect('note_detail', id=note.id)
