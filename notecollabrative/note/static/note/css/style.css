@@ -1,78 +1,220 @@
 /* ==============================
-   DESIGN NOTE COLLABORATIVE
-   Style rose planner
+   DESIGN GLOBAL - NOTES APP
 ================================ */
 
+* {
+    box-sizing: border-box;
+}
+
 body {
-    background: #ffd9e2;
+    margin: 0;
+    background: linear-gradient(180deg, #ffd6e2 0%, #ffdce7 100%);
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
     color: #7a1b22;
     min-height: 100vh;
 }
 
-/* Conteneur général */
+/* ==============================
+   CONTAINER
+================================ */
+
 .container,
 .app-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 1050px;
+    margin: 35px auto;
+    padding: 0 22px;
 }
 
-/* Titres */
-h1, h2, h3 {
+/* ==============================
+   TITRES
+================================ */
+
+h1 {
     color: #7a1b22;
+    font-size: 34px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h2 {
+    color: #7a1b22;
+    font-size: 26px;
     font-weight: 800;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
-/* Cartes */
+h3 {
+    color: #ff4f8b;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+/* ==============================
+   CARTES
+================================ */
+
+.note-item,
 .card,
 .note-card,
 .categorie-card,
 .media-card,
 .partage-card,
 .version-card {
-    background: #ffe5ec;
-    border: 2px solid #ffc6d3;
-    border-radius: 18px;
-    padding: 20px 25px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    margin-bottom: 18px;
+    background: #ffffff;
+    border: none;
+    border-top: 5px solid #ff4f8b;
+    border-radius: 22px;
+    padding: 28px 32px;
+    box-shadow: 0 12px 28px rgba(122, 27, 34, 0.10);
+    margin-bottom: 22px;
+    transition: 0.25s ease;
 }
 
-/* Formulaires */
+.note-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(122, 27, 34, 0.14);
+}
+
+/* ==============================
+   LISTES
+================================ */
+
+.note-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.note-title {
+    color: #7a1b22;
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.note-content {
+    color: #5f4b52;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.note-meta {
+    color: #9b4a55;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 8px 0;
+}
+
+/* ==============================
+   BADGES
+================================ */
+
+.badge,
+.category-badge,
+.permission-badge {
+    background: #e88f6a !important;
+    color: white !important;
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* ==============================
+   BOUTONS
+================================ */
+
+.actions {
+    margin-top: 22px;
+    text-align: center;
+}
+
+button,
+.btn {
+    border: none;
+    border-radius: 14px !important;
+    font-weight: 800;
+    padding: 12px 20px;
+    transition: 0.2s ease;
+    display: inline-block;
+    margin: 6px;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+button:hover,
+.btn:hover {
+    opacity: 0.95;
+    transform: translateY(-2px);
+    text-decoration: none !important;
+}
+
+/* rose principal */
+.btn-primary {
+    background: #ff4f8b !important;
+    color: white !important;
+}
+
+/* orange */
+.btn-success {
+    background: #e88f6a !important;
+    color: white !important;
+}
+
+/* gris */
+.btn-secondary {
+    background: #a8a8a8 !important;
+    color: white !important;
+}
+
+/* modifier */
+.btn-warning {
+    background: #ffd18b !important;
+    color: #7a1b22 !important;
+}
+
+/* supprimer */
+.btn-danger {
+    background: #ff7d86 !important;
+    color: white !important;
+}
+
+/* ==============================
+   FORMULAIRES
+================================ */
+
 form {
-    width: 450px;
+    max-width: 620px;
     margin: 30px auto;
-    background: #ffe5ec;
-    border-radius: 18px;
-    border: 2px solid #ffc6d3;
-    padding: 25px 30px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    background: white;
+    border-radius: 22px;
+    border-top: 5px solid #ff4f8b;
+    padding: 30px 35px;
+    box-shadow: 0 12px 28px rgba(122, 27, 34, 0.10);
 }
 
-/* Labels */
 label {
     display: block;
     color: #7a1b22;
-    font-weight: 600;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    margin-top: 12px;
 }
 
-/* Inputs */
 input,
 textarea,
 select,
 .form-control,
 .form-select {
     width: 100%;
-    background: white;
+    background: #fff7fa;
     border: 2px solid #ffc6d3 !important;
-    border-radius: 12px !important;
-    padding: 9px 12px;
-    margin-bottom: 10px;
+    border-radius: 14px !important;
+    padding: 11px 14px;
+    margin-bottom: 12px;
     color: #7a1b22;
 }
 
@@ -82,214 +224,31 @@ select:focus,
 .form-control:focus,
 .form-select:focus {
     outline: none;
-    border-color: #f29bb2 !important;
-    box-shadow: 0 0 0 3px rgba(242, 155, 178, 0.25);
+    border-color: #ff4f8b !important;
+    box-shadow: 0 0 0 4px rgba(255, 79, 139, 0.18);
 }
 
-/* Boutons généraux */
-button,
-.btn {
-    border: none;
-    border-radius: 14px !important;
-    font-weight: 700;
-    padding: 10px 18px;
-    transition: 0.2s;
-}
-
-button:hover,
-.btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-/* Bouton principal */
-.btn-primary,
-.btn-success {
-    background: #e88f6a !important;
-    color: white !important;
-}
-
-/* Bouton retour */
-.btn-secondary {
-    background: #a8a8a8 !important;
-    color: white !important;
-}
-
-/* Bouton modifier */
-.btn-warning {
-    background: #ffd18b !important;
-    color: #7a1b22 !important;
-}
-
-/* Bouton supprimer */
-.btn-danger {
-    background: #ff8a8a !important;
-    color: white !important;
-}
-
-/* Liens */
-a {
-    color: #7a1b22;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Liste des notes */
-.note-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.note-item {
-    background: #ffe5ec;
-    border: 2px solid #ffc6d3;
-    border-radius: 18px;
-    padding: 18px 22px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    transition: 0.2s;
-}
-
-.note-item:hover {
-    transform: translateX(4px);
-    background: #fff0f5;
-}
-
-/* Titre de note */
-.note-title {
-    color: #7a1b22;
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 8px;
-}
-
-/* Contenu de note */
-.note-content {
-    color: #7a1b22;
-    font-size: 15px;
-    margin-bottom: 10px;
-}
-
-/* Informations */
-.note-meta {
-    color: #9b4a55;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-/* Badges : catégorie / permission / version */
-.badge,
-.category-badge,
-.permission-badge {
-    background: #e88f6a !important;
-    color: white !important;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-/* Liste détails */
-.list-group {
-    width: 500px;
-    margin: 25px auto;
-    background: #ffe5ec;
-    border-radius: 18px;
-    border: 2px solid #ffc6d3;
-    padding: 15px 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-.list-group-item {
-    background: white;
-    border: none;
-    margin: 6px 10px;
-    border-radius: 12px;
-    padding: 12px 14px;
-    color: #7a1b22;
-}
-
-.list-group-item strong {
-    color: #7a1b22;
-}
-
-/* Alertes */
-.alert-danger {
-    background: #ffb3c0;
-    border: 1px solid #d16b7a;
-    color: #7a1b22;
-    border-radius: 12px;
-}
-
-.alert-success {
-    background: #d1fae5;
-    border: 1px solid #10b981;
-    color: #065f46;
-    border-radius: 12px;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    form,
-    .list-group {
-        width: 90%;
-    }
-
-    .container,
-    .app-container {
-        margin: 20px auto;
-    }
-}
-.note-item .btn {
-    width: auto;
-    display: inline-block;
-    margin: 5px;
-}
-
-.container > div .btn {
-    width: auto;
-    display: inline-block;
-}
 /* ==============================
-   DETAILS NOTE
+   COMMENTAIRES / VERSIONS
 ================================ */
 
-.actions {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.actions .btn {
-    width: auto;
-    display: inline-block;
-    margin: 5px;
-}
-
 .version-box {
-    background: white;
+    background: #fff7fa;
     border: 2px solid #ffc6d3;
-    border-radius: 14px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
 }
 
-.note-item h1,
-.note-item h2 {
-    text-align: center;
-}
+/* ==============================
+   CATÉGORIES / ICONES
+================================ */
 
-.note-item p {
-    font-size: 15px;
-    line-height: 1.6;
-}
 .categorie-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
 }
 
 .categorie-actions {
@@ -305,7 +264,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 19px;
     transition: 0.2s;
 }
 
@@ -314,9 +273,142 @@ a:hover {
 }
 
 .edit-icon {
-    background-color: #ffd27d;
+    background-color: #ffd18b;
 }
 
 .delete-icon {
-    background-color: #ff7f7f;
+    background-color: #ff7d86;
+}
+
+/* ==============================
+   NAVBAR DASHBOARD
+================================ */
+
+.navbar {
+    background: linear-gradient(90deg, #ff4f8b, #fb75a4);
+    padding: 18px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(122, 27, 34, 0.15);
+}
+
+.navbar h2,
+.navbar h1 {
+    color: white;
+    margin: 0;
+    font-size: 28px;
+}
+
+.navbar a,
+.nav-btn {
+    background: white;
+    color: #ff4f8b !important;
+    padding: 11px 18px;
+    border-radius: 14px;
+    margin-left: 10px;
+    text-decoration: none !important;
+    font-weight: 800;
+}
+
+/* ==============================
+   DASHBOARD CARDS
+================================ */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 30px;
+}
+
+.dashboard-card {
+    background: white;
+    border-radius: 22px;
+    padding: 30px;
+    box-shadow: 0 12px 28px rgba(122, 27, 34, 0.10);
+    border-top: 5px solid #ff4f8b;
+}
+
+.dashboard-card h3 {
+    color: #ff4f8b;
+    margin-bottom: 15px;
+}
+
+.dashboard-card p {
+    color: #5f4b52;
+    line-height: 1.7;
+}
+
+/* ==============================
+   LIENS
+================================ */
+
+a {
+    color: #7a1b22;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+/* ==============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 900px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .categorie-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .container,
+    .app-container {
+        margin: 20px auto;
+        padding: 0 14px;
+    }
+
+    form {
+        width: 100%;
+        padding: 22px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+.actions {
+    position: relative;
+    z-index: 50;
+}
+
+.actions a,
+.actions .btn,
+.btn {
+    position: relative;
+    z-index: 100;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.note-item {
+    position: relative;
 }
