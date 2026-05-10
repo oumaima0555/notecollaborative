@@ -1,13 +1,96 @@
-<h1>Formulaire Tag</h1>
+<!-- tag_form.html -->
 
-<form method="POST">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire Tag</title>
 
-    {% csrf_token %}
+    <style>
 
-    {{ form.as_p }}
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
 
-    <button type="submit">
-        Enregistrer
-    </button>
+        body{
+            background:#efb7cf;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
 
-</form>
+        .container{
+            width:600px;
+            background:white;
+            border-radius:30px;
+            padding:40px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+            color:#e84393;
+            margin-bottom:30px;
+            font-size:40px;
+        }
+
+        form p{
+            margin-bottom:20px;
+        }
+
+        input{
+            width:100%;
+            padding:15px;
+            border-radius:15px;
+            border:2px solid #f8b6d2;
+            background:#f3f4fa;
+            font-size:16px;
+        }
+
+        button{
+            width:100%;
+            background:#ff4fa3;
+            color:white;
+            border:none;
+            padding:15px;
+            border-radius:15px;
+            font-size:18px;
+            cursor:pointer;
+            margin-top:10px;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#e84393;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Formulaire Tag</h1>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">
+                Enregistrer
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

@@ -1,9 +1,90 @@
-<h1>Liste des Tags</h1>
+<!-- liste_tags.html -->
 
-<ul>
-    {% for tag in tags %}
-        <li>{{ tag.nom_tag }}</li>
-    {% empty %}
-        <li>Aucun tag</li>
-    {% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Tags</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#efb7cf;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            width:700px;
+            background:white;
+            border-radius:30px;
+            padding:40px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+            color:#e84393;
+            margin-bottom:30px;
+            font-size:45px;
+        }
+
+        ul{
+            list-style:none;
+        }
+
+        li{
+            background:#f3f4fa;
+            padding:18px;
+            margin-bottom:15px;
+            border-radius:15px;
+            border:2px solid #f8b6d2;
+            font-size:20px;
+        }
+
+        .empty{
+            text-align:center;
+            color:gray;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Liste des Tags</h1>
+
+        <ul>
+
+            {% for tag in tags %}
+
+                <li>
+                    {{ tag.nom_tag }}
+                </li>
+
+            {% empty %}
+
+                <li class="empty">
+                    Aucun tag
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</body>
+</html>
