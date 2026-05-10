@@ -2,28 +2,53 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="UTF-8">
-    <title>Profil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mon Profil</title>
+
+    <!-- GOOGLE FONT -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
     <style>
 
-        body{
+        *{
             margin:0;
-            font-family:Poppins,sans-serif;
-            background:#ffd9e2;
+            padding:0;
+            box-sizing:border-box;
         }
 
+        body{
+            font-family:'Poppins',sans-serif;
+            background:linear-gradient(135deg,#ffe0ea,#ffd6e5);
+            min-height:100vh;
+        }
+
+        /* NAVBAR */
+
         .navbar{
-            background:#ff8fb1;
-            padding:15px 30px;
+            background:linear-gradient(90deg,#ff5f9e,#ff85a2);
+            padding:18px 40px;
             display:flex;
             justify-content:space-between;
             align-items:center;
-            color:white;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .navbar h2{
-            margin:0;
+        .logo{
+            color:white;
+            font-size:30px;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            gap:12px;
         }
 
         .nav-links{
@@ -34,64 +59,150 @@
         .nav-links a{
             background:white;
             color:#ff4f87;
-            padding:10px 18px;
-            border-radius:10px;
+            padding:12px 20px;
+            border-radius:12px;
             text-decoration:none;
-            font-weight:bold;
+            font-weight:600;
+            transition:0.3s;
         }
 
-        .container{
+        .nav-links a:hover{
+            transform:translateY(-2px);
+            background:#ffe5ee;
+        }
+
+        /* PROFILE CONTAINER */
+
+        .profile-container{
             width:500px;
-            margin:50px auto;
+            margin:60px auto;
             background:white;
+            border-radius:25px;
             padding:40px;
-            border-radius:20px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            position:relative;
+            overflow:hidden;
         }
 
-        h1{
+        .profile-container::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:8px;
+            background:linear-gradient(90deg,#ff4f87,#ff85a2);
+        }
+
+        /* PROFILE HEADER */
+
+        .profile-header{
+            text-align:center;
+            margin-bottom:35px;
+        }
+
+        .profile-icon{
+            width:100px;
+            height:100px;
+            background:linear-gradient(135deg,#ff5f9e,#ff85a2);
+            border-radius:50%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:0 auto 20px;
+            color:white;
+            font-size:40px;
+            box-shadow:0 5px 15px rgba(255,79,135,0.4);
+        }
+
+        .profile-header h1{
             color:#ff4f87;
-            margin-bottom:25px;
+            font-size:35px;
+            margin-bottom:10px;
         }
 
-        label{
+        .profile-header p{
+            color:#777;
+            font-size:15px;
+        }
+
+        /* FORM */
+
+        .input-group{
+            margin-bottom:22px;
+        }
+
+        .input-group label{
             display:block;
-            margin-top:15px;
-            margin-bottom:6px;
-            font-weight:bold;
+            margin-bottom:8px;
+            font-weight:600;
             color:#ff4f87;
         }
 
-        input{
-            width:100%;
-            padding:14px;
-            border:2px solid #ffc0cb;
-            border-radius:12px;
-            outline:none;
-            box-sizing:border-box;
+        .input-box{
+            position:relative;
         }
 
-        button{
+        .input-box i{
+            position:absolute;
+            top:50%;
+            left:15px;
+            transform:translateY(-50%);
+            color:#ff4f87;
+            font-size:16px;
+        }
+
+        .input-box input{
             width:100%;
-            margin-top:25px;
-            padding:15px;
+            padding:15px 15px 15px 48px;
+            border:2px solid #ffd0dd;
+            border-radius:14px;
+            outline:none;
+            font-size:15px;
+            transition:0.3s;
+        }
+
+        .input-box input:focus{
+            border-color:#ff4f87;
+            box-shadow:0 0 8px rgba(255,79,135,0.2);
+        }
+
+        /* BUTTON */
+
+        .btn-submit{
+            width:100%;
+            padding:16px;
             border:none;
-            border-radius:12px;
-            background:#ff4f87;
+            border-radius:14px;
+            background:linear-gradient(90deg,#ff4f87,#ff7aa5);
             color:white;
             font-size:16px;
-            font-weight:bold;
+            font-weight:600;
             cursor:pointer;
+            transition:0.3s;
+            margin-top:10px;
         }
 
-        button:hover{
-            background:#ff2f72;
+        .btn-submit:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 18px rgba(255,79,135,0.3);
         }
 
-        .message{
-            text-align:center;
-            color:green;
-            margin-top:15px;
+        /* RESPONSIVE */
+
+        @media(max-width:600px){
+
+            .profile-container{
+                width:90%;
+                padding:30px;
+            }
+
+            .navbar{
+                padding:15px 20px;
+                flex-direction:column;
+                gap:15px;
+            }
+
         }
 
     </style>
@@ -100,19 +211,27 @@
 
 <body>
 
+    <!-- NAVBAR -->
+
     <div class="navbar">
 
-        <h2>
+        <div class="logo">
+
+            <i class="fa-solid fa-note-sticky"></i>
+
             Notes App
-        </h2>
+
+        </div>
 
         <div class="nav-links">
 
             <a href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i>
                 Dashboard
             </a>
 
             <a href="{% url 'logout' %}">
+                <i class="fa-solid fa-right-from-bracket"></i>
                 Déconnexion
             </a>
 
@@ -120,49 +239,108 @@
 
     </div>
 
-    <div class="container">
+    <!-- PROFILE -->
 
-        <h1>
-            Mon Profil
-        </h1>
+    <div class="profile-container">
+
+        <div class="profile-header">
+
+            <div class="profile-icon">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+            <h1>
+                Mon Profil
+            </h1>
+
+            <p>
+                Modifier vos informations personnelles
+            </p>
+
+        </div>
+
         <form method="POST">
 
             {% csrf_token %}
 
-            <label>
-                Username
-            </label>
+            <!-- USERNAME -->
 
-            <input
-                type="text"
-                name="username"
-                value="{{ request.user.username }}"
-                required
-            >
+            <div class="input-group">
 
-            <label>
-                Email
-            </label>
+                <label>
+                    Username
+                </label>
 
-            <input
-                type="email"
-                name="email"
-                value="{{ request.user.email }}"
-                required
-            >
+                <div class="input-box">
 
-            <label>
-                Nouveau mot de passe
-            </label>
+                    <i class="fa-solid fa-user"></i>
 
-            <input
-                type="password"
-                name="password"
-                placeholder="Laisser vide pour ne pas changer"
-            >
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ request.user.username }}"
+                        required
+                    >
 
-            <button type="submit">
+                </div>
+
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="input-group">
+
+                <label>
+                    Adresse Email
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ request.user.email }}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="input-group">
+
+                <label>
+                    Nouveau mot de passe
+                </label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Laisser vide pour ne pas changer"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button type="submit" class="btn-submit">
+
+                <i class="fa-solid fa-pen-to-square"></i>
+
                 Modifier le profil
+
             </button>
 
         </form>
