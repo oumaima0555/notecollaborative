@@ -39,9 +39,7 @@
                 </p>
 
                 <div class="actions">
-                    <a href="{% url 'note_detail' partage.note.id %}" class="btn btn-primary">
-                        Voir la note
-                    </a>
+                    <a href="{% url 'note_detail' partage.note.id %}?from=collaborations" class="btn btn-primary">Voir la note</a>
                 </div>
 
             </div>

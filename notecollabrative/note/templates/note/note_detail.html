@@ -61,7 +61,15 @@
 
     <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
     <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
-    <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
+    {% if request.GET.from == 'collaborations' %}
+    <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">
+        Retour aux collaborations
+    </a>
+    {% else %}
+    <a href="{% url 'note_liste' %}" class="btn btn-secondary">
+        Retour à mes notes
+    </a>
+    {% endif %}
 
 </div>
 
