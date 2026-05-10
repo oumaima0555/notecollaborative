@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des notes</title>
+    <title>Mes Notes</title>
 
     <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
 </head>
@@ -11,7 +11,7 @@
 
 <div class="container">
 
-    <h1>Mes Notes Collaboratives</h1>
+    <h1>Mes Notes</h1>
 
     <div style="text-align: center; margin-bottom: 20px;">
         <a href="{% url 'note_ajouter' %}" class="btn btn-success">
@@ -22,6 +22,7 @@
             Catégories
         </a>
         <a href="{% url 'tags:liste_tags' %}" class="btn btn-secondary">Tags</a>
+        <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">Notes collaboratives</a>
         <a href="{% url 'recherche_notes' %}" class="btn btn-primary"> Recherche</a>
     </div>
 
@@ -84,6 +85,11 @@
         {% endfor %}
 
     </div>
+    <div class="bottom-actions">
+    <a href="{% url 'home' %}" class="btn btn-secondary">
+        Retour au Dashboard
+    </a>
+</div>
 
 </div>
 

@@ -45,16 +45,25 @@
         </p>
 
         <div class="actions">
-            <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">Modifier</a>
-            <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">Supprimer</a>
-            <a href="{% url 'version' note.id %}" class="btn btn-secondary">Voir versions</a>
-            <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
-            <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
-            <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
-            <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
-            <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
-            <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
-        </div>
+
+    {% if est_proprietaire or permission_user == 'edition' %}
+        <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">Modifier</a>
+        <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
+    {% endif %}
+
+    {% if est_proprietaire %}
+        <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">Supprimer</a>
+        <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
+    {% endif %}
+
+    <a href="{% url 'version' note.id %}" class="btn btn-secondary">Voir versions</a>
+    <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
+
+    <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
+    <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
+    <a href="{% url 'note_liste' %}" class="btn btn-secondary">Retour</a>
+
+</div>
 
     </div>
      
@@ -72,9 +81,11 @@
                     -
                     <span class="badge">{{ partage.permission }}</span>
 
-                    <a href="{% url 'partage_modifier' partage.id %}" class="btn btn-warning">
-                        Modifier permission
-                    </a>
+                    {% if est_proprietaire %}
+                        <a href="{% url 'partage_modifier' partage.id %}" class="btn btn-warning">
+                            Modifier permission
+                        </a>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
@@ -82,7 +93,7 @@
         <p>Aucun collaborateur pour cette note.</p>
     {% endif %}
 </div>
-<!-- code oumaima -->
+<!-- code oumaima --><!--modifier-->
 <div class="note-item">
     <h2>Commentaires</h2>
 
@@ -104,9 +115,11 @@
         <p>Aucun commentaire</p>
     {% endfor %}
 
-    <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">
-        Ajouter commentaire
-    </a>
+    {% if est_proprietaire or permission_user == 'edition' or permission_user == 'commentaire' %}
+        <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">
+            Ajouter commentaire
+        </a>
+    {% endif %}
 </div>
 </div>
 

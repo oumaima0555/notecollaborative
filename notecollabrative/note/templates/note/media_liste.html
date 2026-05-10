@@ -13,10 +13,11 @@
     <h1>Médias de la note : {{ note.titre }}</h1>
 
     <div class="actions">
-        <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
-            Ajouter média
-        </a>
-
+        {% if est_proprietaire or permission_user == 'edition' %}
+    <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
+        Ajouter média
+    </a>
+       {% endif %}
         <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
             Retour à la note
         </a>

@@ -22,4 +22,5 @@ urlpatterns = [
     path('categories/ajouter/', views.categorie_ajouter, name='categorie_ajouter'),
     path('categories/<int:id>/modifier/', views.categorie_modifier, name='categorie_modifier'),
     path('categories/<int:id>/supprimer/', views.categorie_supprimer, name='categorie_supprimer'),
+    path('collaborations/', views.collaborations_avec_moi, name='collaborations_avec_moi'),
 ]

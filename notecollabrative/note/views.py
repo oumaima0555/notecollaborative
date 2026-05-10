@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-
 from .models import Note, Version, Media, Partage, Categorie
 from .forms import NoteForm, VersionForm, MediaForm, PartageForm, CategorieForm
 from django.db.models import Q
@@ -11,13 +10,25 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import re
 from tag.models import Tag
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
 
 User = get_user_model()
 
-
+@login_required
 def note_liste(request):
-    notes = Note.objects.all().order_by('-date_creation')
-    return render(request, 'note/note_liste.html', {'notes': notes})
+    if request.user.is_superuser:
+        notes = Note.objects.all().order_by('-date_creation')
+    else:
+        notes = Note.objects.filter(
+            utilisateur=request.user,
+            partages__isnull=True
+        ).distinct().order_by('-date_creation')
+
+    return render(request, 'note/note_liste.html', {
+        'notes': notes
+    })
 
 def recherche_notes(request):
     titre = request.GET.get('titre', '')
@@ -126,26 +137,52 @@ def exporter_pdf(request, note_id):
 
     return response
 
+@login_required
 def note_detail(request, id):
-    note = get_object_or_404(Note, id=id)
+    note = get_object_or_404(
+        Note.objects.filter(
+            Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
+        ).distinct(),
+        id=id
+    )
+
     medias = note.medias.all()
     partages = note.partages.all()
     versions = note.versions.all().order_by('-date_modification')
+
+    est_proprietaire = note.utilisateur == request.user
+
+    partage_user = Partage.objects.filter(
+        note=note,
+        collaborateur=request.user
+    ).first()
+
+    permission_user = partage_user.permission if partage_user else None
 
     return render(request, 'note/note_detail.html', {
         'note': note,
         'medias': medias,
         'partages': partages,
         'versions': versions,
+        'est_proprietaire': est_proprietaire,
+        'permission_user': permission_user,
     })
 
-
+@login_required
 def note_ajouter(request):
     if request.method == 'POST':
         form = NoteForm(request.POST, request.FILES)
 
         if form.is_valid():
-            note = form.save()
+            note = form.save(commit=False)
+
+            # Lier la note à l'utilisateur connecté
+            note.utilisateur = request.user
+
+            note.save()
+
+            # Important si tu as ajouté les tags ManyToMany
+            form.save_m2m()
 
             image_note = form.cleaned_data.get('image_note')
 
@@ -155,8 +192,8 @@ def note_ajouter(request):
                     type='image',
                     image=image_note,
                     est_interne=True
-               )
- 
+                )
+
                 image_html = f'<img src="{media.image.url}" style="max-width:300px; border-radius:10px;">'
 
                 if '[IMAGE]' in note.contenu:
@@ -180,9 +217,24 @@ def note_ajouter(request):
         'titre_page': 'Ajouter une note'
     })
 
-
+@login_required
 def note_modifier(request, id):
     note = get_object_or_404(Note, id=id)
+
+    # Vérifier si l'utilisateur est le propriétaire
+    est_proprietaire = note.utilisateur == request.user
+
+    # Vérifier si l'utilisateur a la permission édition
+    a_permission_edition = Partage.objects.filter(
+        note=note,
+        collaborateur=request.user,
+        permission='edition'
+    ).exists()
+
+    # Si ce n'est ni le propriétaire ni un collaborateur avec édition
+    if not est_proprietaire and not a_permission_edition:
+        messages.error(request, "Vous n'avez pas la permission de modifier cette note.")
+        return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         ancien_contenu = note.contenu
@@ -200,8 +252,7 @@ def note_modifier(request, id):
                     type='image',
                     image=image_note,
                     est_interne=True
-               )
- 
+                )
 
                 image_html = f'<img src="{media.image.url}" style="max-width:300px; border-radius:10px;">'
 
@@ -228,14 +279,22 @@ def note_modifier(request, id):
     })
 
 
+@login_required
 def note_supprimer(request, id):
     note = get_object_or_404(Note, id=id)
+
+    # Seul le créateur/propriétaire peut supprimer la note
+    if note.utilisateur != request.user:
+        messages.error(request, "Vous n'avez pas la permission de supprimer cette note.")
+        return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         note.delete()
         return redirect('note_liste')
 
-    return render(request, 'note/note_supprimer.html', {'note': note})
+    return render(request, 'note/note_supprimer.html', {
+        'note': note
+    })
 
 
 def version(request, note_id):
@@ -246,32 +305,57 @@ def version(request, note_id):
         'note': note,
         'versions': versions
     })
+@login_required
 def media_liste(request, note_id):
-    note = get_object_or_404(Note, id=note_id)
+    note = get_object_or_404(
+        Note.objects.filter(
+            Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
+        ).distinct(),
+        id=note_id
+    )
 
     medias_internes = note.medias.filter(est_interne=True).order_by('-date_upload')
     medias_supplementaires = note.medias.filter(est_interne=False).order_by('-date_upload')
 
     contenu = note.contenu
 
-    # Liens HTML : <a href="...">
     liens_html = re.findall(r'<a\s+[^>]*href=["\']([^"\']+)["\']', contenu)
-
-    # Liens écrits directement : https://...
     liens_textes = re.findall(r'https?://[^\s<>"\']+', contenu)
-
-    # Fusionner sans doublons
     liens_internes = list(dict.fromkeys(liens_html + liens_textes))
+
+    est_proprietaire = note.utilisateur == request.user
+
+    partage_user = Partage.objects.filter(
+        note=note,
+        collaborateur=request.user
+    ).first()
+
+    permission_user = partage_user.permission if partage_user else None
 
     return render(request, 'note/media_liste.html', {
         'note': note,
         'medias_internes': medias_internes,
         'medias_supplementaires': medias_supplementaires,
         'liens_internes': liens_internes,
+        'est_proprietaire': est_proprietaire,
+        'permission_user': permission_user,
     })
 
+@login_required
 def media_ajouter(request, note_id):
     note = get_object_or_404(Note, id=note_id)
+
+    est_proprietaire = note.utilisateur == request.user
+
+    a_permission_edition = Partage.objects.filter(
+        note=note,
+        collaborateur=request.user,
+        permission='edition'
+    ).exists()
+
+    if not est_proprietaire and not a_permission_edition:
+        messages.error(request, "Vous n'avez pas la permission d'ajouter un média.")
+        return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         form = MediaForm(request.POST, request.FILES)
@@ -289,9 +373,23 @@ def media_ajouter(request, note_id):
         'form': form,
         'note': note
     })
+
+@login_required
 def media_supprimer(request, media_id):
     media = get_object_or_404(Media, id=media_id)
     note = media.note
+
+    est_proprietaire = note.utilisateur == request.user
+
+    a_permission_edition = Partage.objects.filter(
+        note=note,
+        collaborateur=request.user,
+        permission='edition'
+    ).exists()
+
+    if not est_proprietaire and not a_permission_edition:
+        messages.error(request, "Vous n'avez pas la permission de supprimer ce média.")
+        return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         if media.image:
@@ -305,22 +403,23 @@ def media_supprimer(request, media_id):
         'note': note
     })
 
+@login_required
 def partage_ajouter(request, note_id):
     note = get_object_or_404(Note, id=note_id)
+
+    # Seul le propriétaire peut partager la note
+    if note.utilisateur != request.user:
+        messages.error(request, "Seul le propriétaire peut partager cette note.")
+        return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         form = PartageForm(request.POST)
 
-        # Exclure l'utilisateur connecté de la liste des collaborateurs
-        if request.user.is_authenticated:
-            form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
-        else:
-            form.fields['collaborateur'].queryset = User.objects.all()
+        form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
 
         if form.is_valid():
             collaborateur = form.cleaned_data['collaborateur']
 
-            # Vérifier si la note est déjà partagée avec ce collaborateur
             partage_existe = Partage.objects.filter(
                 note=note,
                 collaborateur=collaborateur
@@ -338,28 +437,26 @@ def partage_ajouter(request, note_id):
 
     else:
         form = PartageForm()
-
-        # Exclure l'utilisateur connecté de la liste des collaborateurs
-        if request.user.is_authenticated:
-            form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
-        else:
-            form.fields['collaborateur'].queryset = User.objects.all()
+        form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
 
     return render(request, 'note/partage_form.html', {
         'form': form,
         'note': note
     })
+
+@login_required
 def partage_modifier(request, partage_id):
     partage = get_object_or_404(Partage, id=partage_id)
     note = partage.note
 
+    # Seul le propriétaire peut modifier les permissions
+    if note.utilisateur != request.user:
+        messages.error(request, "Seul le propriétaire peut modifier les permissions.")
+        return redirect('note_detail', id=note.id)
+
     if request.method == 'POST':
         form = PartageForm(request.POST, instance=partage)
-
-        if request.user.is_authenticated:
-            form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
-        else:
-            form.fields['collaborateur'].queryset = User.objects.all()
+        form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
 
         if form.is_valid():
             form.save()
@@ -368,18 +465,13 @@ def partage_modifier(request, partage_id):
 
     else:
         form = PartageForm(instance=partage)
-
-        if request.user.is_authenticated:
-            form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
-        else:
-            form.fields['collaborateur'].queryset = User.objects.all()
+        form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
 
     return render(request, 'note/partage_form.html', {
         'form': form,
         'note': note,
         'titre_page': 'Modifier la permission'
     })
-
 
 def categorie_liste(request):
     categories = Categorie.objects.all()
@@ -429,4 +521,23 @@ def categorie_supprimer(request, id):
 
     return render(request, 'note/categorie_supprimer.html', {
         'categorie': categorie
+    })
+
+@login_required
+def collaborations_avec_moi(request):
+    if request.user.is_superuser:
+        collaborations = Partage.objects.all().select_related(
+            'note',
+            'collaborateur'
+        ).order_by('-date_partage')
+    else:
+        collaborations = Partage.objects.filter(
+            Q(collaborateur=request.user) | Q(note__utilisateur=request.user)
+        ).select_related(
+            'note',
+            'collaborateur'
+        ).order_by('-date_partage')
+
+    return render(request, 'note/collaborations_avec_moi.html', {
+        'collaborations': collaborations
     })

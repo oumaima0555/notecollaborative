@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes Notes Collaboratives</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Mes Notes Collaboratives</h1>
+
+    <div class="note-list">
+
+        {% for partage in collaborations %}
+            <div class="note-item">
+
+                <h2>{{ partage.note.titre }}</h2>
+
+                <p>
+                    <strong>Permission :</strong>
+                    <span class="badge">{{ partage.permission }}</span>
+                </p>
+
+                <p>
+                    <strong>Date de partage :</strong>
+                    {{ partage.date_partage|date:"d/m/Y H:i" }}
+                </p>
+
+                <p>
+                    <strong>Catégorie :</strong>
+                    {% if partage.note.categorie %}
+                        <span class="badge">{{ partage.note.categorie.nom }}</span>
+                    {% else %}
+                        aucune
+                    {% endif %}
+                </p>
+
+                <div class="actions">
+                    <a href="{% url 'note_detail' partage.note.id %}" class="btn btn-primary">
+                        Voir la note
+                    </a>
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="note-item">
+                <p>Aucune note n’est partagée avec vous pour le moment.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="actions" style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+        Retour au Dashboard
+        </a>
+        <a href="{% url 'note_liste' %}" class="btn btn-secondary">
+            Notes personnelles
+        </a>
+    </div>
+
+
+</div>
+
+</body>
+</html>
