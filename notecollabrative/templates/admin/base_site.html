@@ -1,0 +1,651 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}
+    {{ title }} | Notes App Administration
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">Notes App Administration</a>
+    </h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<style>
+    :root {
+        --pink-main: #ff4f8b;
+        --pink-soft: #ffd6e2;
+        --pink-light: #fff0f6;
+        --pink-card: #ffffff;
+        --text-main: #7a1b22;
+        --text-soft: #7c5962;
+        --border: #ffc6d3;
+        --orange: #e88f6a;
+        --gray: #a8a8a8;
+        --danger: #ff7d86;
+        --black-soft: #2b2b2b;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background:
+            radial-gradient(circle at top left, rgba(255,79,139,0.12), transparent 35%),
+            radial-gradient(circle at bottom right, rgba(232,143,106,0.14), transparent 35%),
+            var(--pink-soft) !important;
+        color: var(--text-main) !important;
+        font-family: "Poppins", "Segoe UI", Arial, sans-serif !important;
+        overflow-x: hidden;
+    }
+
+    a:link,
+    a:visited {
+        color: var(--pink-main);
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: var(--text-main);
+        text-decoration: none;
+    }
+
+    #header,
+    .breadcrumbs,
+    #nav-sidebar,
+    .toggle-nav-sidebar {
+        display: none !important;
+    }
+
+    #container,
+    #main,
+    #content,
+    #content-main {
+        background: transparent !important;
+    }
+
+    #content {
+        margin-left: 310px !important;
+        padding: 42px !important;
+        width: calc(100% - 310px) !important;
+        box-sizing: border-box;
+        transition: all 0.35s ease;
+    }
+
+    #content h1 {
+        font-size: 34px !important;
+        font-weight: 900 !important;
+        color: var(--text-main) !important;
+        margin: 0 0 28px !important;
+    }
+
+    body.login #content,
+    body.admin-login-page #content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    body.login .global-admin-sidebar,
+    body.admin-login-page .global-admin-sidebar,
+    body.login .admin-sidebar-toggle,
+    body.admin-login-page .admin-sidebar-toggle {
+        display: none !important;
+    }
+
+    .global-admin-sidebar {
+        width: 310px;
+        min-width: 310px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: linear-gradient(180deg, #ff6fa3, #ff4f8b);
+        padding: 30px 24px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.35s ease;
+        box-shadow: 8px 0 25px rgba(122, 27, 34, 0.18);
+    }
+
+    .global-sidebar-avatar {
+        width: 86px;
+        height: 86px;
+        border-radius: 50%;
+        background: white;
+        color: var(--pink-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        font-weight: 900;
+        margin: 0 auto 34px auto;
+        box-shadow: 0 14px 28px rgba(122, 27, 34, 0.22);
+        border: 4px solid rgba(255,255,255,0.65);
+        transition: all 0.30s ease;
+    }
+
+    .global-sidebar-avatar:hover {
+        transform: scale(1.08) rotate(3deg);
+    }
+
+    .global-sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .global-sidebar-dashboard,
+    .global-sidebar-link,
+    .global-sidebar-view-site {
+        display: block;
+        text-decoration: none;
+        background: rgba(255,255,255,0.95);
+        color: var(--pink-main) !important;
+        font-weight: 900;
+        font-size: 15px;
+        padding: 15px 20px;
+        border-radius: 16px;
+        transition: all 0.25s ease;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    .global-sidebar-dashboard:hover,
+    .global-sidebar-link:hover,
+    .global-sidebar-view-site:hover {
+        background: white;
+        color: var(--text-main) !important;
+        transform: translateX(6px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(122, 27, 34, 0.16);
+    }
+
+    .global-sidebar-dashboard.active,
+    .global-sidebar-link.active {
+        background: var(--text-main);
+        color: white !important;
+    }
+
+    .global-sidebar-group {
+        border-radius: 18px;
+        background: rgba(255,255,255,0.18);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .global-sidebar-group summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 16px 19px;
+        font-weight: 900;
+        font-size: 15px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .global-sidebar-group summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .global-sidebar-group summary::after {
+        content: "⌄";
+        color: white;
+        font-weight: bold;
+        transition: all 0.25s ease;
+    }
+
+    .global-sidebar-group[open] summary::after {
+        transform: rotate(180deg);
+    }
+
+    .global-sidebar-group-content {
+        padding: 0 13px 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .global-sidebar-bottom {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 25px;
+    }
+
+    .global-sidebar-bottom form {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+    }
+
+    .global-sidebar-logout {
+        width: 100%;
+        background: var(--text-main);
+        color: white !important;
+        border: none;
+        padding: 13px 18px;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 900;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+    }
+
+    .global-sidebar-logout:hover {
+        background: #000;
+        transform: translateY(-2px);
+    }
+
+    .admin-sidebar-toggle {
+        position: fixed;
+        top: 14px;
+        left: 24px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: var(--pink-main);
+        color: white;
+        border: 3px solid rgba(255,255,255,0.85);
+        box-shadow: 0 12px 26px rgba(122, 27, 34, 0.30);
+        z-index: 10000;
+        cursor: pointer;
+        font-size: 23px;
+        font-weight: 900;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body.admin-sidebar-collapsed .global-admin-sidebar {
+        transform: translateX(-100%);
+    }
+
+    body.admin-sidebar-collapsed #content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-top: 78px !important;
+        padding-left: 95px !important;
+        padding-right: 42px !important;
+    }
+
+    body.admin-sidebar-collapsed .admin-sidebar-toggle {
+        display: flex;
+    }
+
+    .module {
+        background: white !important;
+        border: none !important;
+        border-radius: 22px !important;
+        overflow: hidden;
+        margin-bottom: 26px !important;
+        box-shadow: 0 14px 30px rgba(122, 27, 34, 0.08);
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        background: linear-gradient(135deg, var(--pink-main), #ff75a9) !important;
+        color: white !important;
+        padding: 16px 20px !important;
+        font-size: 14px !important;
+        font-weight: 900 !important;
+        text-transform: none !important;
+    }
+
+    .form-row {
+        padding: 18px 22px !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+
+    .form-row label {
+        color: var(--text-main) !important;
+        font-weight: 900 !important;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="url"],
+    textarea,
+    select,
+    .vTextField,
+    .vLargeTextField {
+        background: #fff7fa !important;
+        border: 2px solid var(--border) !important;
+        border-radius: 14px !important;
+        padding: 11px 13px !important;
+        color: var(--text-main) !important;
+        outline: none !important;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        border-color: var(--pink-main) !important;
+        box-shadow: 0 0 0 4px rgba(255, 79, 139, 0.18) !important;
+        background: white !important;
+    }
+
+    .submit-row {
+        background: white !important;
+        border: none !important;
+        border-radius: 18px !important;
+        padding: 18px 22px !important;
+        margin: 28px 0 0 !important;
+        box-shadow: 0 14px 30px rgba(122, 27, 34, 0.08);
+    }
+
+    .submit-row input,
+    input[type="submit"],
+    .button,
+    a.button {
+        background: var(--pink-main) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 12px 18px !important;
+        font-weight: 900 !important;
+        cursor: pointer;
+    }
+
+    .submit-row input.default {
+        background: var(--text-main) !important;
+    }
+
+    .deletelink,
+    .submit-row a.deletelink {
+        background: var(--danger) !important;
+        color: white !important;
+        border-radius: 14px !important;
+        padding: 12px 18px !important;
+    }
+
+    #changelist {
+        background: white !important;
+        border: none !important;
+        border-radius: 22px !important;
+        overflow: hidden;
+        box-shadow: 0 14px 30px rgba(122, 27, 34, 0.08);
+    }
+
+    #changelist table thead th {
+        background: var(--text-main) !important;
+        color: white !important;
+        padding: 13px 12px !important;
+    }
+
+    #changelist table thead th a {
+        color: white !important;
+    }
+
+    #changelist table tbody td,
+    #changelist table tbody th {
+        padding: 13px 12px !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+
+    .row1 {
+        background: #ffffff !important;
+    }
+
+    .row2 {
+        background: #fff7fa !important;
+    }
+
+    .object-tools a,
+    .object-tools a:link,
+    .object-tools a:visited {
+        background: var(--pink-main) !important;
+        color: white !important;
+        border-radius: 999px !important;
+        padding: 11px 18px !important;
+        font-weight: 900 !important;
+    }
+
+    ul.messagelist li {
+        border-radius: 14px !important;
+        background: white !important;
+        color: var(--text-main) !important;
+        border: 1px solid var(--border) !important;
+    }
+
+    .errornote,
+    .errorlist {
+        background: #fff2f4 !important;
+        color: var(--danger) !important;
+        border: 1px solid #f3b7c0 !important;
+        border-radius: 14px !important;
+        padding: 13px 15px !important;
+    }
+
+    @media (max-width: 850px) {
+        .global-admin-sidebar {
+            position: relative;
+            width: 100%;
+            min-width: 100%;
+            height: auto;
+            transform: none !important;
+        }
+
+        #content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 24px !important;
+        }
+
+        .admin-sidebar-toggle {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const path = window.location.pathname;
+
+        if (
+            document.body.classList.contains("login") ||
+            path === "/admin/login/" ||
+            path === "/admin/logout/"
+        ) {
+            document.body.classList.add("admin-login-page");
+            return;
+        }
+
+        if (document.querySelector(".global-admin-sidebar")) {
+            return;
+        }
+
+        const sidebar = document.createElement("aside");
+        sidebar.className = "global-admin-sidebar";
+
+        sidebar.innerHTML = `
+            <div class="global-sidebar-avatar">A</div>
+
+            <div class="global-sidebar-menu">
+                <a href="/admin/" class="global-sidebar-dashboard" id="dashboard-link">
+                    Dashboard
+                </a>
+
+                <details class="global-sidebar-group" id="notes-group">
+                    <summary>Notes</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/admin/note/note/" class="global-sidebar-link">Gérer notes</a>
+                        <a href="/admin/note/note/add/" class="global-sidebar-link">Ajouter note</a>
+                        <a href="/admin/note/categorie/" class="global-sidebar-link">Gérer catégories</a>
+                        <a href="/admin/note/categorie/add/" class="global-sidebar-link">Ajouter catégorie</a>
+                        <a href="/admin/note/partage/" class="global-sidebar-link">Gérer partages</a>
+                        <a href="/admin/note/media/" class="global-sidebar-link">Gérer médias</a>
+                        <a href="/admin/note/version/" class="global-sidebar-link">Voir versions</a>
+                    </div>
+                </details>
+
+                <details class="global-sidebar-group" id="tags-group">
+                    <summary>Tags</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/admin/tag/tag/" class="global-sidebar-link">Gérer tags</a>
+                        <a href="/admin/tag/tag/add/" class="global-sidebar-link">Ajouter tag</a>
+                    </div>
+                </details>
+
+                <details class="global-sidebar-group" id="comments-group">
+                    <summary>Commentaires</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/admin/commentaire/commentaire/" class="global-sidebar-link">Gérer commentaires</a>
+                        <a href="/admin/commentaire/commentaire/add/" class="global-sidebar-link">Ajouter commentaire</a>
+                    </div>
+                </details>
+
+                <details class="global-sidebar-group" id="notifications-group">
+                    <summary>Notifications</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/admin/notification/notification/" class="global-sidebar-link">Gérer notifications</a>
+                        <a href="/admin/notification/notification/add/" class="global-sidebar-link">Ajouter notification</a>
+                    </div>
+                </details>
+
+                <details class="global-sidebar-group" id="users-group">
+                    <summary>Utilisateurs</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/admin/utilisateur/utilisateur/" class="global-sidebar-link">Gérer utilisateurs</a>
+                        <a href="/admin/utilisateur/utilisateur/add/" class="global-sidebar-link">Ajouter utilisateur</a>
+                        <a href="/admin/auth/group/" class="global-sidebar-link">Gérer groupes</a>
+                    </div>
+                </details>
+
+                <details class="global-sidebar-group" id="navigation-group">
+                    <summary>Navigation</summary>
+                    <div class="global-sidebar-group-content">
+                        <a href="/home/" class="global-sidebar-link">Dashboard application</a>
+                        <a href="/note_liste/" class="global-sidebar-link">Notes personnelles</a>
+                        <a href="/note_liste/collaborations/" class="global-sidebar-link">Notes collaboratives</a>
+                        <a href="/admin/password_change/" class="global-sidebar-link">Changer mot de passe</a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="global-sidebar-bottom">
+                <a href="/home/" class="global-sidebar-view-site">Voir le site</a>
+
+                <form method="post" action="{% url 'admin:logout' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'admin:login' %}">
+                    <button type="submit" class="global-sidebar-logout">
+                        <span>⏻</span>
+                        Déconnexion
+                    </button>
+                </form>
+            </div>
+        `;
+
+        document.body.prepend(sidebar);
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "admin-sidebar-toggle";
+        toggleBtn.type = "button";
+        toggleBtn.innerHTML = "☰";
+        toggleBtn.title = "Afficher le menu";
+        document.body.prepend(toggleBtn);
+
+        if (localStorage.getItem("adminSidebarCollapsed") === "1") {
+            document.body.classList.add("admin-sidebar-collapsed");
+        }
+
+        toggleBtn.addEventListener("click", function () {
+            localStorage.removeItem("adminSidebarCollapsed");
+            document.body.classList.remove("admin-sidebar-collapsed");
+        });
+
+        const dashboardLink = document.getElementById("dashboard-link");
+        const notesGroup = document.getElementById("notes-group");
+        const tagsGroup = document.getElementById("tags-group");
+        const commentsGroup = document.getElementById("comments-group");
+        const notificationsGroup = document.getElementById("notifications-group");
+        const usersGroup = document.getElementById("users-group");
+        const navigationGroup = document.getElementById("navigation-group");
+
+        if (path === "/admin/") {
+            dashboardLink.classList.add("active");
+        }
+
+        if (path.startsWith("/admin/note/")) {
+            notesGroup.classList.add("active");
+            notesGroup.setAttribute("open", "open");
+        }
+
+        if (path.startsWith("/admin/tag/")) {
+            tagsGroup.classList.add("active");
+            tagsGroup.setAttribute("open", "open");
+        }
+
+        if (path.startsWith("/admin/commentaire/")) {
+            commentsGroup.classList.add("active");
+            commentsGroup.setAttribute("open", "open");
+        }
+
+        if (path.startsWith("/admin/notification/")) {
+            notificationsGroup.classList.add("active");
+            notificationsGroup.setAttribute("open", "open");
+        }
+
+        if (path.startsWith("/admin/utilisateur/") || path.startsWith("/admin/auth/group/")) {
+            usersGroup.classList.add("active");
+            usersGroup.setAttribute("open", "open");
+        }
+
+        if (path.startsWith("/admin/password_change/")) {
+            navigationGroup.classList.add("active");
+            navigationGroup.setAttribute("open", "open");
+        }
+
+        const sidebarLinks = document.querySelectorAll(
+            ".global-sidebar-link, .global-sidebar-dashboard, .global-sidebar-view-site"
+        );
+
+        sidebarLinks.forEach(function (link) {
+            const href = link.getAttribute("href");
+
+            if (href === path) {
+                link.classList.add("active");
+            }
+
+            link.addEventListener("click", function () {
+                localStorage.setItem("adminSidebarCollapsed", "1");
+                document.body.classList.add("admin-sidebar-collapsed");
+            });
+        });
+
+        const logoutForm = document.querySelector(".global-sidebar-bottom form");
+
+        if (logoutForm) {
+            logoutForm.addEventListener("submit", function () {
+                localStorage.setItem("adminSidebarCollapsed", "1");
+                document.body.classList.add("admin-sidebar-collapsed");
+            });
+        }
+    });
+</script>
+{% endblock %}
