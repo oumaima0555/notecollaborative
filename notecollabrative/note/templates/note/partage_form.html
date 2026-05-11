@@ -1,44 +1,46 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Partager note</title>
+    <title>Partager la note</title>
     <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
 </head>
 <body>
 
-<h1>Partager la note : {{ note.titre }}</h1>
+<div class="container">
 
-{% if messages %}
-    {% for message in messages %}
-        <p style="color: red;">{{ message }}</p>
-    {% endfor %}
-{% endif %}
+    <h1>Partager la note : {{ note.titre }}</h1>
 
-<form method="POST">
-    {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
 
-    <div>
-        <label>Collaborateur :</label>
-        {{ form.collaborateur }}
-    </div>
+        <div>
+            <label>Collaborateur :</label>
+            {{ form.collaborateur }}
+        </div>
 
-    <br>
+        <br>
 
-    <div>
-        <label>Permission :</label>
-        {{ form.permission }}
-    </div>
+        <div>
+            <label>Permission :</label>
+            {{ form.permission }}
+        </div>
 
-    <br>
+        <br>
 
-    <button type="submit">Partager</button>
-</form>
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">
+                Partager
+            </button>
 
-<br>
+            <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+                Retour
+            </a>
+        </div>
+    </form>
 
-<a href="{% url 'note_detail' note.id %}">Retour</a>
+</div>
 
 </body>
 </html>

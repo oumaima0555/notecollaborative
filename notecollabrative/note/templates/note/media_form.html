@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Ajouter média</title>
@@ -8,18 +8,40 @@
 </head>
 <body>
 
-<h1>Ajouter un média à : {{ note.titre }}</h1>
+<div class="container">
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <h1>Ajouter un média à : {{ note.titre }}</h1>
 
-    <button type="submit">Ajouter</button>
-</form>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-<br>
+        <div>
+            <label>Type:</label>
+            {{ form.type }}
+        </div>
 
-<a href="{% url 'note_detail' note.id %}">Retour</a>
+        <div>
+            <label>Url:</label>
+            {{ form.url }}
+        </div>
+
+        <div>
+            <label>Image:</label>
+            {{ form.image }}
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-success">
+                Ajouter
+            </button>
+
+            <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+                Retour
+            </a>
+        </div>
+    </form>
+
+</div>
 
 </body>
 </html>
