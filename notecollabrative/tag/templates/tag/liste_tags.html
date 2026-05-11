@@ -1,10 +1,9 @@
-<!-- liste_tags.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des Tags</title>
+    <title>Liste des tags</title>
 
     <style>
 
@@ -16,44 +15,111 @@
         }
 
         body{
-            background:#efb7cf;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
-
-        .container{
-            width:700px;
-            background:white;
-            border-radius:30px;
-            padding:40px;
-            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+            background:#f7d6df;
+            min-height:100vh;
+            padding:25px;
         }
 
         h1{
             text-align:center;
-            color:#e84393;
+            color:#7b0f1f;
+            font-size:38px;
             margin-bottom:30px;
-            font-size:45px;
+            font-weight:bold;
         }
 
-        ul{
-            list-style:none;
+        .top-buttons{
+            display:flex;
+            justify-content:center;
+            gap:15px;
+            margin-bottom:35px;
         }
 
-        li{
-            background:#f3f4fa;
-            padding:18px;
-            margin-bottom:15px;
-            border-radius:15px;
-            border:2px solid #f8b6d2;
-            font-size:20px;
+        .btn{
+            padding:12px 24px;
+            border:none;
+            border-radius:14px;
+            text-decoration:none;
+            font-size:16px;
+            font-weight:bold;
+            color:white;
+            transition:0.3s;
+        }
+
+        .btn-add{
+            background:#e59567;
+        }
+
+        .btn-return{
+            background:#a8a8a8;
+        }
+
+        .btn:hover{
+            transform:scale(1.05);
+        }
+
+        .tag-container{
+            width:70%;
+            margin:auto;
+        }
+
+        .tag-card{
+            background:#f3f3f3;
+            border-radius:22px;
+            padding:22px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+            border-top:5px solid #ff4f8b;
+            margin-bottom:20px;
+        }
+
+        .tag-info h2{
+            color:#7b0f1f;
+            margin-bottom:8px;
+            font-size:24px;
+        }
+
+        .tag-info p{
+            color:#555;
+            font-size:16px;
+        }
+
+        .actions{
+            display:flex;
+            gap:12px;
+        }
+
+        .icon-btn{
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-size:22px;
+            transition:0.3s;
+        }
+
+        .edit{
+            background:#f4c56c;
+        }
+
+        .delete{
+            background:#f56f83;
+        }
+
+        .icon-btn:hover{
+            transform:scale(1.1);
         }
 
         .empty{
             text-align:center;
-            color:gray;
+            font-size:22px;
+            color:#777;
+            margin-top:40px;
         }
 
     </style>
@@ -62,27 +128,55 @@
 
 <body>
 
-    <div class="container">
+    <h1>Liste des tags</h1>
 
-        <h1>Liste des Tags</h1>
+    <div class="top-buttons">
 
-        <ul>
+        <a href="{% url 'tag_ajouter' %}" class="btn btn-add">
+            Ajouter tag
+        </a>
 
-            {% for tag in tags %}
+        <a href="{% url 'note_liste' %}" class="btn btn-return">
+            Retour aux notes
+        </a>
 
-                <li>
-                    {{ tag.nom_tag }}
-                </li>
+    </div>
 
-            {% empty %}
+    <div class="tag-container">
 
-                <li class="empty">
-                    Aucun tag
-                </li>
+        {% for tag in tags %}
 
-            {% endfor %}
+        <div class="tag-card">
 
-        </ul>
+            <div class="tag-info">
+                <h2>{{ tag.nom_tag }}</h2>
+                <p>ID : {{ tag.id_tag }}</p>
+            </div>
+
+            <div class="actions">
+
+                <a href="{% url 'tag_modifier' tag.id_tag %}"
+                   class="icon-btn edit">
+                    ✏️
+                </a>
+
+                <a href="{% url 'tag_supprimer' tag.id_tag %}"
+                   class="icon-btn delete"
+                   onclick="return confirm('Supprimer ce tag ?')">
+                    🗑️
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+            Aucun tag disponible
+        </div>
+
+        {% endfor %}
 
     </div>
 

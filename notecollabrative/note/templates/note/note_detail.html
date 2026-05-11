@@ -103,32 +103,81 @@
 </div>
 <!-- code oumaima --><!--modifier-->
 <div class="note-item">
+
     <h2>Commentaires</h2>
 
-    {% for commentaire in note.commentaires.all %}
-        <div class="version-box">
-            <strong>
-                {{ commentaire.utilisateur }}
-            </strong>
+    {% if note.commentaires.all %}
 
-            <p>
-                {{ commentaire.contenu_com }}
-            </p>
+        {% for commentaire in note.commentaires.all %}
 
-            <small class="note-meta">
-                {{ commentaire.date_com|date:"d/m/Y" }}
-            </small>
-        </div>
-    {% empty %}
+            <!-- AFFICHAGE COMMENTAIRE -->
+            <div class="version-box">
+
+                <strong>
+                    {{ commentaire.utilisateur }}
+                </strong>
+
+                <p>
+                    {{ commentaire.contenu_com }}
+                </p>
+
+
+                <div style="margin-top:15px;">
+
+                    <!-- MODIFIER -->
+                    <a href="{% url 'commentaire_modifier' commentaire.pk %}"
+                       class="btn btn-warning">
+
+                        Modifier Commentaire
+
+                    </a>
+
+                    <!-- SUPPRIMER -->
+                    <a href="{% url 'commentaire_supprimer' commentaire.pk %}"
+                       class="btn btn-danger">
+
+                        Supprimer Commentaire
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <br>
+
+        {% endfor %}
+
+    {% else %}
+
         <p>Aucun commentaire</p>
-    {% endfor %}
 
-    {% if est_proprietaire or permission_user == 'edition' or permission_user == 'commentaire' %}
-        <a href="{% url 'Commentaire:ajouter_commentaire' note.id %}" class="btn btn-primary">
-            Ajouter commentaire
-        </a>
+        <button class="btn btn-secondary"
+                onclick='alert("Il n y a aucun commentaire")'>
+
+            Modifier Commentaire
+
+        </button>
+
+        <button class="btn btn-secondary"
+                onclick='alert("Il n y a aucun commentaire")'>
+
+            Supprimer Commentaire
+
+        </button>
+
     {% endif %}
-</div>
+
+    <br>
+
+    <!-- AJOUTER -->
+    <a href="{% url 'ajouter_commentaire' note.id %}"
+       class="btn btn-primary">
+
+        Ajouter commentaire
+
+    </a>
+
 </div>
 
 </body>
