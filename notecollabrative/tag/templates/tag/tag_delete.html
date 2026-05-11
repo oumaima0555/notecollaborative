@@ -1,13 +1,120 @@
-<h1>Supprimer Tag</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer Tag</title>
 
-<p>Voulez-vous supprimer {{ tag.nom_tag }} ?</p>
+    <style>
 
-<form method="POST">
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
 
-    {% csrf_token %}
+        body{
+            background:#f7d6df;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
 
-    <button type="submit">
-        Oui supprimer
-    </button>
+        .delete-container{
+            width:450px;
+            background:#f3f3f3;
+            padding:35px;
+            border-radius:25px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+            border-top:5px solid #ff4f8b;
+            text-align:center;
+        }
 
-</form>
+        h1{
+            color:#7b0f1f;
+            margin-bottom:25px;
+            font-size:32px;
+        }
+
+        p{
+            font-size:18px;
+            color:#444;
+            margin-bottom:30px;
+        }
+
+        .tag-name{
+            color:#ff4f8b;
+            font-weight:bold;
+        }
+
+        .buttons{
+            display:flex;
+            justify-content:center;
+            gap:15px;
+        }
+
+        .btn{
+            padding:12px 22px;
+            border:none;
+            border-radius:12px;
+            text-decoration:none;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+            font-size:15px;
+        }
+
+        .btn-delete{
+            background:#f56f83;
+        }
+
+        .btn-return{
+            background:#a8a8a8;
+        }
+
+        .btn:hover{
+            opacity:0.9;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="delete-container">
+
+        <h1>Supprimer Tag</h1>
+
+        <p>
+            Voulez-vous supprimer
+            <span class="tag-name">
+                {{ tag.nom_tag }}
+            </span>
+            ?
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="buttons">
+
+                <button type="submit" class="btn btn-delete">
+                    Oui supprimer
+                </button>
+
+                <a href="{% url 'liste_tags' %}" class="btn btn-return">
+                    Retour
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

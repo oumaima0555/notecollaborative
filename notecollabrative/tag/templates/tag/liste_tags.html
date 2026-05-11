@@ -1,9 +1,184 @@
-<h1>Liste des Tags</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des tags</title>
 
-<ul>
-    {% for tag in tags %}
-        <li>{{ tag.nom_tag }}</li>
-    {% empty %}
-        <li>Aucun tag</li>
-    {% endfor %}
-</ul>
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f7d6df;
+            min-height:100vh;
+            padding:25px;
+        }
+
+        h1{
+            text-align:center;
+            color:#7b0f1f;
+            font-size:38px;
+            margin-bottom:30px;
+            font-weight:bold;
+        }
+
+        .top-buttons{
+            display:flex;
+            justify-content:center;
+            gap:15px;
+            margin-bottom:35px;
+        }
+
+        .btn{
+            padding:12px 24px;
+            border:none;
+            border-radius:14px;
+            text-decoration:none;
+            font-size:16px;
+            font-weight:bold;
+            color:white;
+            transition:0.3s;
+        }
+
+        .btn-add{
+            background:#e59567;
+        }
+
+        .btn-return{
+            background:#a8a8a8;
+        }
+
+        .btn:hover{
+            transform:scale(1.05);
+        }
+
+        .tag-container{
+            width:70%;
+            margin:auto;
+        }
+
+        .tag-card{
+            background:#f3f3f3;
+            border-radius:22px;
+            padding:22px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+            border-top:5px solid #ff4f8b;
+            margin-bottom:20px;
+        }
+
+        .tag-info h2{
+            color:#7b0f1f;
+            margin-bottom:8px;
+            font-size:24px;
+        }
+
+        .tag-info p{
+            color:#555;
+            font-size:16px;
+        }
+
+        .actions{
+            display:flex;
+            gap:12px;
+        }
+
+        .icon-btn{
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-decoration:none;
+            font-size:22px;
+            transition:0.3s;
+        }
+
+        .edit{
+            background:#f4c56c;
+        }
+
+        .delete{
+            background:#f56f83;
+        }
+
+        .icon-btn:hover{
+            transform:scale(1.1);
+        }
+
+        .empty{
+            text-align:center;
+            font-size:22px;
+            color:#777;
+            margin-top:40px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>Liste des tags</h1>
+
+    <div class="top-buttons">
+
+        <a href="{% url 'tag_ajouter' %}" class="btn btn-add">
+            Ajouter tag
+        </a>
+
+        <a href="{% url 'note_liste' %}" class="btn btn-return">
+            Retour aux notes
+        </a>
+
+    </div>
+
+    <div class="tag-container">
+
+        {% for tag in tags %}
+
+        <div class="tag-card">
+
+            <div class="tag-info">
+                <h2>{{ tag.nom_tag }}</h2>
+                <p>ID : {{ tag.id_tag }}</p>
+            </div>
+
+            <div class="actions">
+
+                <a href="{% url 'tag_modifier' tag.id_tag %}"
+                   class="icon-btn edit">
+                    ✏️
+                </a>
+
+                <a href="{% url 'tag_supprimer' tag.id_tag %}"
+                   class="icon-btn delete"
+                   onclick="return confirm('Supprimer ce tag ?')">
+                    🗑️
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+            Aucun tag disponible
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

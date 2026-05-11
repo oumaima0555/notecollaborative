@@ -1,4 +1,4 @@
- {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
 </head>
+
 <body>
 
 <div class="container">
@@ -14,6 +15,7 @@
     <h1>Mes Notes</h1>
 
     <div style="text-align: center; margin-bottom: 20px;">
+
         <a href="{% url 'note_ajouter' %}" class="btn btn-success">
             Ajouter une note
         </a>
@@ -21,75 +23,99 @@
         <a href="{% url 'categorie_liste' %}" class="btn btn-secondary">
             Catégories
         </a>
-        <a href="{% url 'tags:liste_tags' %}" class="btn btn-secondary">Tags</a>
-        <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">Notes collaboratives</a>
-        <a href="{% url 'recherche_notes' %}" class="btn btn-primary"> Recherche</a>
+
+        <a href="{% url 'liste_tags' %}" class="btn btn-secondary">
+            Tags
+        </a>
+
+        <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">
+            Notes collaboratives
+        </a>
+
+        <a href="{% url 'recherche_notes' %}" class="btn btn-primary">
+            Recherche
+        </a>
+
     </div>
 
     <div class="note-list">
 
         {% for note in notes %}
 
-            <div class="note-item">
+        <div class="note-item">
 
-                <div class="note-title">
-                    {{ note.titre }}
-                </div>
+            <div class="note-title">
+                {{ note.titre }}
+            </div>
 
-                <div class="note-content">
-                    {{ note.contenu|truncatechars:120 }}
-                </div>
+            <div class="note-content">
+                {{ note.contenu|truncatechars:120 }}
+            </div>
 
-                <div class="note-meta">
-                    Créée le : {{ note.date_creation|date:"d/m/Y H:i" }}
+            <div class="note-meta">
 
-                    {% if note.date_modification %}
-                        | Modifiée le : {{ note.date_modification|date:"d/m/Y H:i" }}
-                    {% endif %}
+                Créée le :
+                {{ note.date_creation|date:"d/m/Y H:i" }}
 
-                    {% if note.categorie %}
-                        | Catégorie :
-                        <span class="badge">{{ note.categorie.nom }}</span>
-                    {% endif %}
-                </div>
+                {% if note.date_modification %}
+                    | Modifiée le :
+                    {{ note.date_modification|date:"d/m/Y H:i" }}
+                {% endif %}
 
-                <div style="margin-top: 15px;">
-                    <a href="{% url 'note_detail' note.id %}" class="btn btn-primary">
-                        Voir
-                    </a>
-
-                    <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">
-                        Modifier
-                    </a>
-
-                    <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">
-                        Supprimer
-                    </a>
-
-                    <a href="{% url 'version' note.id %}" class="btn btn-secondary">
-                        Historique
-                    </a>
-                    <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">
-                        Partager
-                    </a>
-                </div>
+                {% if note.categorie %}
+                    | Catégorie :
+                    <span class="badge">
+                        {{ note.categorie.nom }}
+                    </span>
+                {% endif %}
 
             </div>
+
+            <div style="margin-top: 15px;">
+
+                <!-- NOTE -->
+                <a href="{% url 'note_detail' note.id %}" class="btn btn-primary">
+                    Voir
+                </a>
+
+                <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">
+                    Modifier
+                </a>
+
+                <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">
+                    Supprimer
+                </a>
+
+                <a href="{% url 'version' note.id %}" class="btn btn-secondary">
+                    Historique
+                </a>
+
+                <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">
+                    Partager
+                </a>
+
+
+            </div>
+
+        </div>
 
         {% empty %}
 
-            <div class="note-item">
-                <p>Aucune note pour le moment.</p>
-            </div>
+        <div class="note-item">
+            <p>Aucune note pour le moment.</p>
+        </div>
 
         {% endfor %}
 
     </div>
+
     <div class="bottom-actions">
-    <a href="{% url 'home' %}" class="btn btn-secondary">
-        Retour au Dashboard
-    </a>
-</div>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            Retour au Dashboard
+        </a>
+
+    </div>
 
 </div>
 

@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{{ titre_page }}</title>
+    <title>Modifier Commentaire</title>
 
     <style>
 
@@ -22,20 +22,20 @@
             align-items:center;
         }
 
-        .form-container{
-            width:450px;
+        .comment-container{
+            width:500px;
             background:#f3f3f3;
-            padding:30px;
+            padding:35px;
             border-radius:25px;
             box-shadow:0 5px 15px rgba(0,0,0,0.08);
             border-top:5px solid #ff4f8b;
         }
 
-        h2{
+        h1{
             text-align:center;
             color:#7b0f1f;
-            margin-bottom:25px;
-            font-size:30px;
+            margin-bottom:30px;
+            font-size:32px;
         }
 
         .form-group{
@@ -50,28 +50,30 @@
             font-size:16px;
         }
 
-        input{
+        textarea{
             width:100%;
+            min-height:140px;
             padding:12px;
             border:1px solid #ccc;
             border-radius:12px;
             font-size:16px;
             outline:none;
+            resize:none;
         }
 
-        input:focus{
+        textarea:focus{
             border:2px solid #ff4f8b;
         }
 
         .buttons{
             display:flex;
             justify-content:center;
-            gap:12px;
+            gap:15px;
             margin-top:25px;
         }
 
         .btn{
-            padding:12px 20px;
+            padding:12px 22px;
             border:none;
             border-radius:12px;
             text-decoration:none;
@@ -82,11 +84,15 @@
         }
 
         .btn-save{
-            background:#e59567;
+            background:#f4c56c;
         }
 
         .btn-return{
             background:#a8a8a8;
+        }
+
+        .btn:hover{
+            opacity:0.9;
         }
 
     </style>
@@ -95,9 +101,9 @@
 
 <body>
 
-    <div class="form-container">
+    <div class="comment-container">
 
-        <h2>{{ titre_page }}</h2>
+        <h1>Modifier Commentaire</h1>
 
         <form method="POST">
 
@@ -105,19 +111,19 @@
 
             <div class="form-group">
 
-                <label>Nom du tag</label>
+                <label>Commentaire</label>
 
-                {{ form.nom_tag }}
+                {{ form.contenu_com }}
 
             </div>
 
             <div class="buttons">
 
                 <button type="submit" class="btn btn-save">
-                    Enregistrer
+                    Modifier
                 </button>
 
-                <a href="{% url 'liste_tags' %}" class="btn btn-return">
+                <a href="javascript:history.back()" class="btn btn-return">
                     Retour
                 </a>
 

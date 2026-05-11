@@ -80,15 +80,14 @@ def register_view(request):
 
         if form.is_valid():
 
-            user = form.save(commit=False)
-
-            user.username = form.cleaned_data['username']
-
-            user.set_password(
-                form.cleaned_data['password']
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
+            user = Collaborateur.objects.create_user(
+                username=username,
+                email=email,
+                password=password
             )
-
-            user.save()
 
             # connexion automatique
             login(request, user)

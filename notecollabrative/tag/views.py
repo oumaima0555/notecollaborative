@@ -2,50 +2,64 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tag
 from .forms import TagForm
 
-# Liste des tags
-def liste_tags(request):
-    tags = Tag.objects.all()
-    return render(request, 'tag/liste_tags.html', {'tags': tags})
 
-# Ajouter tag
+# LISTE
+def liste_tags(request):
+
+    tags = Tag.objects.all()
+
+    return render(request, 'tag/liste_tags.html', {
+        'tags': tags
+    })
+
+
+# AJOUTER
 def ajouter_tag(request):
 
     if request.method == 'POST':
+
         form = TagForm(request.POST)
 
         if form.is_valid():
             form.save()
-            return redirect('tags:liste_tags')
+            return redirect('liste_tags')
 
     else:
         form = TagForm()
 
-    return render(request, 'tags/tag_form.html', {'form': form})
+    return render(request, 'tag/tag_form.html', {
+        'form': form,
+        'titre_page': 'Ajouter Tag'
+    })
 
-# Modifier
-def modifier_tag(request, id):
 
-    tag = get_object_or_404(Tag, id=id)
+# MODIFIER
+def modifier_tag(request, id_tag):
+
+    tag = get_object_or_404(Tag, pk=id_tag)
 
     if request.method == 'POST':
+
         form = TagForm(request.POST, instance=tag)
 
         if form.is_valid():
             form.save()
-            return redirect('tags:liste_tags')
+            return redirect('liste_tags')
 
     else:
         form = TagForm(instance=tag)
 
-    return render(request, 'tags/tag_form.html', {'form': form})
+    return render(request, 'tag/tag_form.html', {
+        'form': form,
+        'titre_page': 'Modifier Tag'
+    })
 
-# Supprimer
-def supprimer_tag(request, id):
 
-    tag = get_object_or_404(Tag, id=id)
+# SUPPRIMER
+def supprimer_tag(request, id_tag):
 
-    if request.method == 'POST':
-        tag.delete()
-        return redirect('tags:liste_tags')
+    tag = get_object_or_404(Tag, pk=id_tag)
 
-    return render(request, 'tags/tag_delete.html', {'tag': tag})
+    tag.delete()
+
+    return redirect('liste_tags')

@@ -29,12 +29,30 @@ class LoginForm(forms.ModelForm):
 
 class RegisterForm(forms.ModelForm):
 
-    password = forms.CharField(
+    password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'input',
             'placeholder': 'entrer password'
         })
     )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'confirmer password'
+        })
+    )
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', 'les mots de passe ne correspondent pas')
+        return cleaned_data
 
     class Meta:
 
@@ -43,8 +61,6 @@ class RegisterForm(forms.ModelForm):
         fields = [
             'username',
             'email',
-            'nom',
-            'prenom',
-            'num',
-            'password'
+            'password1',
+            'password2'
         ]

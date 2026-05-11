@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
 
-app_name = 'Commentaire'
-
 urlpatterns = [
 
     path(
@@ -10,4 +8,17 @@ urlpatterns = [
         views.ajouter_commentaire,
         name='ajouter_commentaire'
     ),
+
+    path(
+        'modifier/<int:id>/',
+        views.modifier_commentaire,
+        name='commentaire_modifier'
+    ),
+
+    path(
+        'supprimer/<int:id>/',
+        views.supprimer_commentaire,
+        name='commentaire_supprimer'
+    ),
+
 ]
