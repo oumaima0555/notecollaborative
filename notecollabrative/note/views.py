@@ -137,23 +137,31 @@ def exporter_pdf(request, note_id):
 
     p.showPage()
     p.save()
-
     return response
 
 @login_required
 def note_detail(request, id):
-    note = get_object_or_404(
-        Note.objects.filter(
-            Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
-        ).distinct(),
-        id=id
-    )
+    # Si l'utilisateur est admin, il peut voir toutes les notes
+    if request.user.is_superuser:
+        note = get_object_or_404(Note, id=id)
+
+    # Sinon, l'utilisateur normal voit seulement :
+    # - ses propres notes
+    # - les notes partagées avec lui
+    else:
+        note = get_object_or_404(
+            Note.objects.filter(
+                Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
+            ).distinct(),
+            id=id
+        )
 
     medias = note.medias.all()
     partages = note.partages.all()
     versions = note.versions.all().order_by('-date_modification')
 
-    est_proprietaire = note.utilisateur == request.user
+    # L'admin est considéré comme propriétaire pour avoir tous les boutons
+    est_proprietaire = note.utilisateur == request.user or request.user.is_superuser
 
     partage_user = Partage.objects.filter(
         note=note,
@@ -323,14 +331,18 @@ def version(request, note_id):
         'note': note,
         'versions': versions
     })
+
 @login_required
 def media_liste(request, note_id):
-    note = get_object_or_404(
-        Note.objects.filter(
-            Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
-        ).distinct(),
-        id=note_id
-    )
+    if request.user.is_superuser:
+        note = get_object_or_404(Note, id=note_id)
+    else:
+        note = get_object_or_404(
+            Note.objects.filter(
+                Q(utilisateur=request.user) | Q(partages__collaborateur=request.user)
+            ).distinct(),
+            id=note_id
+        )
 
     medias_internes = note.medias.filter(est_interne=True).order_by('-date_upload')
     medias_supplementaires = note.medias.filter(est_interne=False).order_by('-date_upload')
@@ -341,7 +353,7 @@ def media_liste(request, note_id):
     liens_textes = re.findall(r'https?://[^\s<>"\']+', contenu)
     liens_internes = list(dict.fromkeys(liens_html + liens_textes))
 
-    est_proprietaire = note.utilisateur == request.user
+    est_proprietaire = note.utilisateur == request.user or request.user.is_superuser
 
     partage_user = Partage.objects.filter(
         note=note,
