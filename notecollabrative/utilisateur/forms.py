@@ -36,6 +36,12 @@ class RegisterForm(forms.ModelForm):
         })
     )
 
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'input',
+            'placeholder': 'confirmer password'
+        }))
+
     class Meta:
 
         model = Collaborateur
@@ -43,8 +49,21 @@ class RegisterForm(forms.ModelForm):
         fields = [
             'username',
             'email',
-            'nom',
-            'prenom',
-            'num',
-            'password'
+            
+            'password',
+            'password1'
         ]
+
+        def clean(self):
+            
+            cleaned_data = super().clean()
+
+            password = cleaned_data.get('password')
+            password1 = cleaned_data.get('password1')
+
+            if password and password1 and password != password1:
+                raise forms.ValidationError(
+                    'Les mots de passe ne correspondent pas.'
+                )
+            
+            return cleaned_data

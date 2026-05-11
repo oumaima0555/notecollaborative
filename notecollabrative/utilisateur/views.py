@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.contrib.auth.models import User
+
 from .forms import RegisterForm
 from .models import Utilisateur, Administrateur, Collaborateur
 
@@ -79,29 +81,19 @@ def register_view(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-
-            user = form.save(commit=False)
-
-            user.username = form.cleaned_data['username']
-
-            user.set_password(
-                form.cleaned_data['password']
-            )
-
-            user.save()
-
-            # connexion automatique
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password= form.cleaned_data.get('password')
+            user = Utilisateur.objects.create_user(username=username,email=email, password=password)
             login(request, user)
-
             messages.success(
                 request,
                 'Compte créé avec succès'
             )
-
-            return redirect('home')
-
+            return redirect('home') 
+    
         else:
-
+            print(form.errors)
             messages.error(
                 request,
                 'Erreur dans le formulaire'

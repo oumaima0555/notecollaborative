@@ -489,7 +489,7 @@
 
             </p>
 
-            <form method="POST">
+            <form method="POST" action=" {% url 'register' %}">
 
                 {% csrf_token %}
 
@@ -497,12 +497,7 @@
 
                     <i class="fa-solid fa-user"></i>
 
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Nom d'utilisateur"
-                        required
-                    >
+                    {{ form.username }}
 
                 </div>
 
@@ -510,12 +505,7 @@
 
                     <i class="fa-solid fa-envelope"></i>
 
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Adresse email"
-                        required
-                    >
+                    {{ form.email }}
 
                 </div>
 
@@ -523,12 +513,7 @@
 
                     <i class="fa-solid fa-lock"></i>
 
-                    <input
-                        type="password"
-                        name="password1"
-                        placeholder="Mot de passe"
-                        required
-                    >
+                    {{ form.password }}
 
                 </div>
 
@@ -536,12 +521,7 @@
 
                     <i class="fa-solid fa-shield-halved"></i>
 
-                    <input
-                        type="password"
-                        name="password2"
-                        placeholder="Confirmer mot de passe"
-                        required
-                    >
+                    {{ form.password1 }}
 
                 </div>
 
@@ -549,7 +529,7 @@
 
                     <i class="fa-solid fa-user-plus"></i>
 
-                    S'inscrire
+                    S'inscrire  
 
                 </button>
 
