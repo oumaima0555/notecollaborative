@@ -76,7 +76,6 @@
         padding: 42px !important;
         width: calc(100% - 310px) !important;
         box-sizing: border-box;
-        transition: all 0.35s ease;
     }
 
     #content h1 {
@@ -94,11 +93,11 @@
     }
 
     body.login .global-admin-sidebar,
-    body.admin-login-page .global-admin-sidebar,
-    body.login .admin-sidebar-toggle,
-    body.admin-login-page .admin-sidebar-toggle {
+    body.admin-login-page .global-admin-sidebar {
         display: none !important;
     }
+
+    /* ================= SIDEBAR ================= */
 
     .global-admin-sidebar {
         width: 310px;
@@ -114,7 +113,6 @@
         z-index: 9999;
         display: flex;
         flex-direction: column;
-        transition: transform 0.35s ease;
         box-shadow: 8px 0 25px rgba(122, 27, 34, 0.18);
     }
 
@@ -254,41 +252,7 @@
         transform: translateY(-2px);
     }
 
-    .admin-sidebar-toggle {
-        position: fixed;
-        top: 14px;
-        left: 24px;
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: var(--pink-main);
-        color: white;
-        border: 3px solid rgba(255,255,255,0.85);
-        box-shadow: 0 12px 26px rgba(122, 27, 34, 0.30);
-        z-index: 10000;
-        cursor: pointer;
-        font-size: 23px;
-        font-weight: 900;
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-
-    body.admin-sidebar-collapsed .global-admin-sidebar {
-        transform: translateX(-100%);
-    }
-
-    body.admin-sidebar-collapsed #content {
-        margin-left: 0 !important;
-        width: 100% !important;
-        padding-top: 78px !important;
-        padding-left: 95px !important;
-        padding-right: 42px !important;
-    }
-
-    body.admin-sidebar-collapsed .admin-sidebar-toggle {
-        display: flex;
-    }
+    /* ================= STYLE DES PAGES ADMIN ================= */
 
     .module {
         background: white !important;
@@ -443,17 +407,12 @@
             width: 100%;
             min-width: 100%;
             height: auto;
-            transform: none !important;
         }
 
         #content {
             margin-left: 0 !important;
             width: 100% !important;
             padding: 24px !important;
-        }
-
-        .admin-sidebar-toggle {
-            display: none !important;
         }
     }
 </style>
@@ -563,22 +522,6 @@
 
         document.body.prepend(sidebar);
 
-        const toggleBtn = document.createElement("button");
-        toggleBtn.className = "admin-sidebar-toggle";
-        toggleBtn.type = "button";
-        toggleBtn.innerHTML = "☰";
-        toggleBtn.title = "Afficher le menu";
-        document.body.prepend(toggleBtn);
-
-        if (localStorage.getItem("adminSidebarCollapsed") === "1") {
-            document.body.classList.add("admin-sidebar-collapsed");
-        }
-
-        toggleBtn.addEventListener("click", function () {
-            localStorage.removeItem("adminSidebarCollapsed");
-            document.body.classList.remove("admin-sidebar-collapsed");
-        });
-
         const dashboardLink = document.getElementById("dashboard-link");
         const notesGroup = document.getElementById("notes-group");
         const tagsGroup = document.getElementById("tags-group");
@@ -631,21 +574,7 @@
             if (href === path) {
                 link.classList.add("active");
             }
-
-            link.addEventListener("click", function () {
-                localStorage.setItem("adminSidebarCollapsed", "1");
-                document.body.classList.add("admin-sidebar-collapsed");
-            });
         });
-
-        const logoutForm = document.querySelector(".global-sidebar-bottom form");
-
-        if (logoutForm) {
-            logoutForm.addEventListener("submit", function () {
-                localStorage.setItem("adminSidebarCollapsed", "1");
-                document.body.classList.add("admin-sidebar-collapsed");
-            });
-        }
     });
 </script>
 {% endblock %}
