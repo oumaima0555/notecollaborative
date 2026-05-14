@@ -1,164 +1,90 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.contrib.auth import get_user_model
 
-from .forms import RegisterForm
-from .models import Utilisateur, Administrateur, Collaborateur
-
-
-@login_required(login_url='login')
-def home(request):
-
-    return render(
-        request,
-        'home.html'
-    )
-
-
+User = get_user_model()
+# LOGIN
 def login_view(request):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-        user = None
-
-        # connexion avec username
         user = authenticate(
             request,
             username=username,
             password=password
         )
 
-        # connexion avec email
-        if user is None:
-
-            try:
-
-                user_obj = Utilisateur.objects.get(email=username)
-
-                user = authenticate(
-                    request,
-                    username=user_obj.username,
-                    password=password
-                )
-
-            except Utilisateur.DoesNotExist:
-                pass
-
         if user is not None:
 
-            login(request, user)
+            # admin ممنوع من login normal
+            if user.is_superuser:
 
-            messages.success(
-                request,
-                'Connexion réussie'
-            )
+                return render(request, 'login.html', {
+                    'error': 'Admin doit se connecter depuis /admin'
+                })
+
+            login(request, user)
 
             return redirect('home')
 
         else:
 
-            messages.error(
-                request,
-                'Nom utilisateur ou mot de passe incorrect'
-            )
+            return render(request, 'login.html', {
+                'error': 'Username ou password incorrect'
+            })
 
-    return render(
-        request,
-        'login.html'
-    )
-
+    return render(request, 'login.html')
 
 def register_view(request):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        form = RegisterForm(request.POST)
+        nom = request.POST.get("nom")
+        prenom = request.POST.get("prenom")
+        num = request.POST.get("num")
 
-        if form.is_valid():
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            user = Collaborateur.objects.create_user(
-                username=username,
-                email=email,
-                password=password
-            )
+        if User.objects.filter(username=username).exists():
 
-            # connexion automatique
-            login(request, user)
+            return render(request, 'register.html', {
+                'error': 'Username déjà existe'
+            })
 
-            messages.success(
-                request,
-                'Compte créé avec succès'
-            )
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            nom=nom,
+            prenom=prenom,
+            num=num
+        )
 
-            return redirect('home')
+        login(request, user)
 
-        else:
+        return redirect('home')
 
-            messages.error(
-                request,
-                'Erreur dans le formulaire'
-            )
+    return render(request, 'register.html')
+# HOME
+def dashboard(request):
 
-    else:
-
-        form = RegisterForm()
-
-    return render(
-        request,
-        'register.html',
-        {
-            'form': form
-        }
-    )
+    return render(request, 'home.html')
 
 
+# PROFILE
+def profile_view(request):
+
+    return render(request, 'profile.html')
+
+
+# LOGOUT
 def logout_view(request):
 
     logout(request)
 
-    messages.success(
-        request,
-        'Déconnexion réussie'
-    )
-
     return redirect('login')
-
-
-@login_required
-def profile_view(request):
-
-    if request.method == 'POST':
-
-        user = request.user
-
-        user.username = request.POST.get('username')
-        user.email = request.POST.get('email')
-
-        password = request.POST.get('password')
-
-        if password:
-            user.set_password(password)
-
-        user.save()
-
-        # باش يبقى connecté
-        login(request, user)
-
-        messages.success(
-            request,
-            'Profil modifié avec succès'
-        )
-
-        return redirect('profile')
-
-    return render(
-        request,
-        'profile.html'
-    )

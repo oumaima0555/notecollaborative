@@ -1,9 +1,10 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractUser,Group,Permission    
 #voici les models 
 
 class Utilisateur(AbstractUser):
+    pass
     id=models.AutoField(primary_key=True)
     nom=models.CharField(max_length=100)
     prenom=models.CharField(max_length=100)

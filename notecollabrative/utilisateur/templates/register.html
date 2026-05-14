@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -9,15 +10,11 @@
 
     <title>Inscription - Notes App</title>
 
-    <!-- ICONS -->
-
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- GOOGLE FONT -->
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
 
     <style>
 
@@ -41,17 +38,15 @@
 
             background:linear-gradient(135deg,#ffd6e7,#ffc2dc,#ff9fc8);
 
-            overflow:hidden;
+            padding:20px;
 
         }
 
-        /* CONTAINER */
-
         .container{
 
-            width:980px;
+            width:1100px;
 
-            height:600px;
+            min-height:650px;
 
             background:white;
 
@@ -64,8 +59,6 @@
             box-shadow:0 15px 40px rgba(0,0,0,0.15);
 
         }
-
-        /* LEFT */
 
         .left{
 
@@ -139,7 +132,7 @@
 
         .left h1{
 
-            font-size:48px;
+            font-size:56px;
 
             line-height:1.2;
 
@@ -151,29 +144,25 @@
 
         .left p{
 
-            font-size:17px;
+            font-size:18px;
 
-            line-height:1.8;
+            line-height:1.9;
 
             z-index:2;
 
         }
 
-        /* RIGHT */
-
         .right{
 
             width:50%;
 
-            padding:45px;
+            padding:60px 50px;
 
             display:flex;
 
             flex-direction:column;
 
             justify-content:center;
-
-            position:relative;
 
         }
 
@@ -183,11 +172,13 @@
 
             color:#d63384;
 
-            font-size:38px;
+            font-size:52px;
 
             font-weight:800;
 
-            margin-bottom:8px;
+            margin-bottom:10px;
+
+            line-height:1.2;
 
         }
 
@@ -197,17 +188,17 @@
 
             color:#777;
 
-            margin-bottom:30px;
+            margin-bottom:35px;
+
+            font-size:17px;
 
         }
-
-        /* INPUT */
 
         .input-box{
 
             position:relative;
 
-            margin-bottom:18px;
+            margin-bottom:20px;
 
         }
 
@@ -217,13 +208,15 @@
 
             top:50%;
 
-            left:15px;
+            left:18px;
 
             transform:translateY(-50%);
 
             color:#ff4fa3;
 
-            font-size:16px;
+            font-size:17px;
+
+            z-index:2;
 
         }
 
@@ -231,7 +224,7 @@
 
             width:100%;
 
-            padding:15px 15px 15px 48px;
+            padding:16px 16px 16px 55px;
 
             border:2px solid #ffd1e6;
 
@@ -243,6 +236,8 @@
 
             transition:0.3s;
 
+            background:white;
+
         }
 
         .input-box input:focus{
@@ -253,13 +248,11 @@
 
         }
 
-        /* BUTTON */
-
         .register-btn{
 
             width:100%;
 
-            padding:15px;
+            padding:16px;
 
             border:none;
 
@@ -269,7 +262,7 @@
 
             color:white;
 
-            font-size:16px;
+            font-size:17px;
 
             font-weight:700;
 
@@ -291,17 +284,9 @@
 
         }
 
-        .register-btn i{
-
-            margin-right:8px;
-
-        }
-
-        /* LOGIN BUTTON */
-
         .login-link{
 
-            margin-top:15px;
+            margin-top:18px;
 
             text-align:center;
 
@@ -335,87 +320,27 @@
 
         }
 
-        /* SOCIAL */
+        .error{
 
-        .social-icons{
+            background:#ffe5e5;
 
-            display:flex;
+            color:#d8000c;
 
-            justify-content:center;
+            padding:12px;
 
-            gap:15px;
+            border-radius:10px;
 
-            margin-top:25px;
-
-        }
-
-        .social-icons a{
-
-            width:45px;
-
-            height:45px;
-
-            border-radius:50%;
-
-            background:#fff0f6;
-
-            display:flex;
-
-            justify-content:center;
-
-            align-items:center;
-
-            color:#ff4fa3;
-
-            text-decoration:none;
-
-            transition:0.3s;
-
-            font-size:18px;
-
-        }
-
-        .social-icons a:hover{
-
-            background:#ff4fa3;
-
-            color:white;
-
-        }
-
-        /* FOOTER */
-
-        .footer{
+            margin-bottom:20px;
 
             text-align:center;
 
-            margin-top:18px;
-
-            color:#777;
-
-            font-size:14px;
-
         }
-
-        .footer a{
-
-            color:#ff4fa3;
-
-            text-decoration:none;
-
-            font-weight:700;
-
-        }
-
-        /* RESPONSIVE */
 
         @media(max-width:950px){
 
             .container{
 
                 width:95%;
-
-                height:auto;
 
                 flex-direction:column;
 
@@ -447,7 +372,7 @@
 
     <div class="container">
 
-        <!-- LEFT SIDE -->
+        <!-- LEFT -->
 
         <div class="left">
 
@@ -467,13 +392,13 @@
 
                 Créez votre espace collaboratif,
                 partagez vos idées et gérez vos notes
-                avec une interface moderne et professionnelle.
+                facilement.
 
             </p>
 
         </div>
 
-        <!-- RIGHT SIDE -->
+        <!-- RIGHT -->
 
         <div class="right">
 
@@ -489,15 +414,61 @@
 
             </p>
 
-            <form method="POST" action=" {% url 'register' %}">
+            {% if error %}
+
+                <div class="error">
+
+                    {{ error }}
+
+                </div>
+
+            {% endif %}
+
+            <form method="POST" action="{% url 'register' %}">
 
                 {% csrf_token %}
 
                 <div class="input-box">
 
+                    <i class="fa-solid fa-id-card"></i>
+
+                    <input type="text"
+                           name="nom"
+                           placeholder="Nom"
+                           required>
+
+                </div>
+
+                <div class="input-box">
+
                     <i class="fa-solid fa-user"></i>
 
-                    {{ form.username }}
+                    <input type="text"
+                           name="prenom"
+                           placeholder="Prénom"
+                           required>
+
+                </div>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-phone"></i>
+
+                    <input type="text"
+                           name="num"
+                           placeholder="Téléphone"
+                           required>
+
+                </div>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-at"></i>
+
+                    <input type="text"
+                           name="username"
+                           placeholder="Nom utilisateur"
+                           required>
 
                 </div>
 
@@ -505,7 +476,10 @@
 
                     <i class="fa-solid fa-envelope"></i>
 
-                    {{ form.email }}
+                    <input type="email"
+                           name="email"
+                           placeholder="Email"
+                           required>
 
                 </div>
 
@@ -513,15 +487,10 @@
 
                     <i class="fa-solid fa-lock"></i>
 
-                    {{ form.password }}
-
-                </div>
-
-                <div class="input-box">
-
-                    <i class="fa-solid fa-shield-halved"></i>
-
-                    {{ form.password1 }}
+                    <input type="password"
+                           name="password"
+                           placeholder="Mot de passe"
+                           required>
 
                 </div>
 
@@ -529,51 +498,17 @@
 
                     <i class="fa-solid fa-user-plus"></i>
 
-                    S'inscrire  
+                    S'inscrire
 
                 </button>
 
             </form>
 
-            <!-- BUTTON BACK TO LOGIN -->
-
             <div class="login-link">
 
                 <a href="{% url 'login' %}">
 
-                    <i class="fa-solid fa-right-to-bracket"></i>
-
                     Retour à la connexion
-
-                </a>
-
-            </div>
-
-            <!-- SOCIAL ICONS -->
-
-            <div class="social-icons">
-
-                <a href="#">
-                    <i class="fa-brands fa-google"></i>
-                </a>
-
-                <a href="#">
-                    <i class="fa-brands fa-facebook-f"></i>
-                </a>
-
-                <a href="#">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-
-            </div>
-
-            <div class="footer">
-
-                Déjà inscrit ?
-
-                <a href="{% url 'login' %}">
-
-                    Se connecter
 
                 </a>
 
