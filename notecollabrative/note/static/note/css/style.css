@@ -412,3 +412,90 @@ a:hover {
 .note-item {
     position: relative;
 }
+.collaborateurs-list {
+    list-style-position: inside;
+    padding-left: 20px;
+}
+
+.collaborateur-row {
+    margin-bottom: 12px;
+}
+
+.collaborateur-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.collaborateur-info .icon-link {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: transform 0.2s ease;
+}
+
+.collaborateur-info .icon-link:hover {
+    transform: scale(1.1);
+}
+
+.collaborateur-info .edit-icon {
+    background-color: #ffc978;
+}
+
+.collaborateur-info .delete-icon {
+    background-color: #ff6f7d;
+}
+.commentaire-box {
+    position: relative;
+}
+
+.commentaire-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.commentaire-content p {
+    margin-top: 8px;
+    margin-bottom: 0;
+    color: #5f4b52;
+    line-height: 1.6;
+}
+
+.commentaire-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.commentaire-actions .icon-link {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    text-decoration: none;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin: 0 !important;
+    transition: transform 0.2s ease;
+}
+
+.commentaire-actions .icon-link:hover {
+    transform: scale(1.1);
+}
+
+.commentaire-actions .edit-icon {
+    background-color: #ffd18b;
+}
+
+.commentaire-actions .delete-icon {
+    background-color: #ff7d86;
+}

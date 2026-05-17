@@ -17,7 +17,7 @@ urlpatterns = [
     path('media/<int:media_id>/supprimer/', views.media_supprimer, name='media_supprimer'),
     path('notes/<int:note_id>/partager/', views.partage_ajouter, name='partage_ajouter'),
     path('partage/<int:partage_id>/modifier/', views.partage_modifier, name='partage_modifier'),
-
+    path('partage/<int:partage_id>/supprimer/', views.partage_supprimer, name='partage_supprimer'),
     path('categories/', views.categorie_liste, name='categorie_liste'),
     path('categories/ajouter/', views.categorie_ajouter, name='categorie_ajouter'),
     path('categories/<int:id>/modifier/', views.categorie_modifier, name='categorie_modifier'),

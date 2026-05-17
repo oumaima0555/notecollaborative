@@ -84,16 +84,26 @@
     {% if partages %}
         <ul>
             {% for partage in partages %}
-                <li>
-                    <strong>{{ partage.collaborateur }}</strong>
-                    -
-                    <span class="badge">{{ partage.permission }}</span>
+                <li class="collaborateur-row">
+                    <div class="collaborateur-info">
+                        <strong>{{ partage.collaborateur }}</strong>
+                        <span>-</span>
+                        <span class="badge">{{ partage.permission }}</span>
 
-                    {% if est_proprietaire %}
-                        <a href="{% url 'partage_modifier' partage.id %}" class="btn btn-warning">
-                            Modifier permission
-                        </a>
-                    {% endif %}
+                        {% if est_proprietaire %}
+                            <a href="{% url 'partage_modifier' partage.id %}"
+                               class="icon-link edit-icon"
+                               title="Modifier la permission">
+                                ✏️
+                            </a>
+
+                            <a href="{% url 'partage_supprimer' partage.id %}"
+                               class="icon-link delete-icon"
+                               title="Supprimer le partage">
+                                🗑️
+                            </a>
+                        {% endif %}
+                    </div>
                 </li>
             {% endfor %}
         </ul>
@@ -110,41 +120,33 @@
 
         {% for commentaire in note.commentaires.all %}
 
-            <!-- AFFICHAGE COMMENTAIRE -->
-            <div class="version-box">
+            <div class="version-box commentaire-box">
 
-                <strong>
-                    {{ commentaire.utilisateur }}
-                </strong>
+                <div class="commentaire-content">
+                    <div>
+                        <strong>{{ commentaire.utilisateur }}</strong>
 
-                <p>
-                    {{ commentaire.contenu_com }}
-                </p>
+                        <p>
+                            {{ commentaire.contenu_com }}
+                        </p>
+                    </div>
 
+                    <div class="commentaire-actions">
+                        <a href="{% url 'commentaire_modifier' commentaire.pk %}"
+                           class="icon-link edit-icon"
+                           title="Modifier le commentaire">
+                            ✏️
+                        </a>
 
-                <div style="margin-top:15px;">
-
-                    <!-- MODIFIER -->
-                    <a href="{% url 'commentaire_modifier' commentaire.pk %}"
-                       class="btn btn-warning">
-
-                        Modifier Commentaire
-
-                    </a>
-
-                    <!-- SUPPRIMER -->
-                    <a href="{% url 'commentaire_supprimer' commentaire.pk %}"
-                       class="btn btn-danger">
-
-                        Supprimer Commentaire
-
-                    </a>
-
+                        <a href="{% url 'commentaire_supprimer' commentaire.pk %}"
+                           class="icon-link delete-icon"
+                           title="Supprimer le commentaire">
+                            🗑️
+                        </a>
+                    </div>
                 </div>
 
             </div>
-
-            <br>
 
         {% endfor %}
 
@@ -152,31 +154,16 @@
 
         <p>Aucun commentaire</p>
 
-        <button class="btn btn-secondary"
-                onclick='alert("Il n y a aucun commentaire")'>
-
-            Modifier Commentaire
-
-        </button>
-
-        <button class="btn btn-secondary"
-                onclick='alert("Il n y a aucun commentaire")'>
-
-            Supprimer Commentaire
-
-        </button>
-
     {% endif %}
 
     <br>
 
-    <!-- AJOUTER -->
-    <a href="{% url 'ajouter_commentaire' note.id %}"
-       class="btn btn-primary">
-
-        Ajouter commentaire
-
-    </a>
+    <div class="actions">
+        <a href="{% url 'ajouter_commentaire' note.id %}"
+           class="btn btn-primary">
+            Ajouter commentaire
+        </a>
+    </div>
 
 </div>
 

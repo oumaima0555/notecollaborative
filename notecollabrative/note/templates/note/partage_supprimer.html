@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer le partage</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Supprimer le partage</h1>
+
+    <p>
+        Voulez-vous vraiment supprimer le partage de la note
+        <strong>{{ note.titre }}</strong>
+        avec
+        <strong>{{ partage.collaborateur.username }}</strong> ?
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">
+                Supprimer
+            </button>
+
+            <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>

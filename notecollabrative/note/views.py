@@ -507,6 +507,32 @@ def partage_modifier(request, partage_id):
         'note': note,
         'titre_page': 'Modifier la permission'
     })
+@login_required
+def partage_supprimer(request, partage_id):
+    partage = get_object_or_404(Partage, id=partage_id)
+    note = partage.note
+
+    # Seul le propriétaire de la note peut supprimer un partage
+    if note.utilisateur != request.user:
+        messages.error(request, "Seul le propriétaire peut supprimer ce partage.")
+        return redirect('note_detail', id=note.id)
+
+    if request.method == 'POST':
+        collaborateur = partage.collaborateur
+        partage.delete()
+
+        Notification.objects.create(
+            utilisateur=collaborateur,
+            messsage=f"Le partage de la note '{note.titre}' a été supprimé."
+        )
+
+        messages.success(request, "Le partage a été supprimé avec succès.")
+        return redirect('note_detail', id=note.id)
+
+    return render(request, 'note/partage_supprimer.html', {
+        'partage': partage,
+        'note': note
+    })
 
 def categorie_liste(request):
     categories = Categorie.objects.all()
