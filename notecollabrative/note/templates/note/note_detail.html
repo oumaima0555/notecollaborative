@@ -14,10 +14,10 @@
 
         <h1>{{ note.titre }}</h1>
 
-       <div class="note-content">
-            {{ note.contenu|safe }}
-       </div>
-       
+        <div class="note-content">
+            {{ contenu_note_detail|safe }}
+        </div>
+
         <p class="note-meta">
             <strong>Catégorie :</strong>
             {% if note.categorie %}
@@ -26,14 +26,16 @@
                 aucune
             {% endif %}
         </p>
+
         <p class="note-meta">
             <strong>Tags :</strong>
             {% for nt in note.note_tag_set.all %}
-               <span class="badge">{{ nt.tag.nom_tag }}</span>
-               {% empty %}
-               aucun tag
-               {% endfor %}
-</p>
+                <span class="badge">{{ nt.tag.nom_tag }}</span>
+            {% empty %}
+                aucun tag
+            {% endfor %}
+        </p>
+
         <p class="note-meta">
             <strong>Date création :</strong>
             {{ note.date_creation|date:"d/m/Y H:i" }}
@@ -46,123 +48,149 @@
 
         <div class="actions">
 
-    {% if est_proprietaire or permission_user == 'edition' %}
-        <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">Modifier</a>
-        <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">Ajouter média</a>
-    {% endif %}
+            {% if est_proprietaire or permission_user == 'edition' %}
+                <a href="{% url 'note_modifier' note.id %}" class="btn btn-warning">
+                    Modifier
+                </a>
 
-    {% if est_proprietaire %}
-        <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">Supprimer</a>
-        <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">Partager</a>
-    {% endif %}
+                <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
+                    Ajouter média
+                </a>
+            {% endif %}
 
-    <a href="{% url 'version' note.id %}" class="btn btn-secondary">Voir versions</a>
-    <a href="{% url 'media_liste' note.id %}" class="btn btn-success">Voir médias</a>
+            {% if est_proprietaire %}
+                <a href="{% url 'note_supprimer' note.id %}" class="btn btn-danger">
+                    Supprimer
+                </a>
 
-    <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">Export PDF</a>
-    <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">Export Markdown</a>
-    {% if request.GET.from == 'collaborations' %}
-    <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">
-        Retour aux collaborations
-    </a>
-    {% else %}
-    <a href="{% url 'note_liste' %}" class="btn btn-secondary">
-        Retour à mes notes
-    </a>
-    {% endif %}
+                <a href="{% url 'partage_ajouter' note.id %}" class="btn btn-primary">
+                    Partager
+                </a>
+            {% endif %}
 
-</div>
+            <a href="{% url 'version' note.id %}" class="btn btn-secondary">
+                Voir versions
+            </a>
+
+            <a href="{% url 'media_liste' note.id %}" class="btn btn-success">
+                Voir médias
+            </a>
+
+            <a href="{% url 'exporter_pdf' note.id %}" class="btn btn-danger">
+                Export PDF
+            </a>
+
+            <a href="{% url 'exporter_markdown' note.id %}" class="btn btn-secondary">
+                Export Markdown
+            </a>
+
+            {% if request.GET.from == 'collaborations' %}
+                <a href="{% url 'collaborations_avec_moi' %}" class="btn btn-secondary">
+                    Retour aux collaborations
+                </a>
+            {% else %}
+                <a href="{% url 'note_liste' %}" class="btn btn-secondary">
+                    Retour à mes notes
+                </a>
+            {% endif %}
+
+        </div>
 
     </div>
-     
-  
 
 
-<div class="note-item">
-    <h2>Collaborateurs</h2>
+    <div class="note-item">
+        <h2>Collaborateurs</h2>
 
-    {% if partages %}
-        <ul>
-            {% for partage in partages %}
-                <li class="collaborateur-row">
-                    <div class="collaborateur-info">
-                        <strong>{{ partage.collaborateur }}</strong>
-                        <span>-</span>
-                        <span class="badge">{{ partage.permission }}</span>
+        {% if partages %}
+            <ul>
+                {% for partage in partages %}
+                    <li class="collaborateur-row">
+                        <div class="collaborateur-info">
+                            <strong>{{ partage.collaborateur }}</strong>
+                            <span>-</span>
+                            <span class="badge">{{ partage.permission }}</span>
 
-                        {% if est_proprietaire %}
-                            <a href="{% url 'partage_modifier' partage.id %}"
-                               class="icon-link edit-icon"
-                               title="Modifier la permission">
-                                ✏️
-                            </a>
+                            {% if est_proprietaire %}
+                                <a href="{% url 'partage_modifier' partage.id %}"
+                                   class="icon-link edit-icon"
+                                   title="Modifier la permission">
+                                    ✏️
+                                </a>
 
-                            <a href="{% url 'partage_supprimer' partage.id %}"
-                               class="icon-link delete-icon"
-                               title="Supprimer le partage">
-                                🗑️
-                            </a>
+                                <a href="{% url 'partage_supprimer' partage.id %}"
+                                   class="icon-link delete-icon"
+                                   title="Supprimer le partage">
+                                    🗑️
+                                </a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucun collaborateur pour cette note.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="note-item">
+
+        <h2>Commentaires</h2>
+
+        {% if note.commentaires.all %}
+
+            {% for commentaire in note.commentaires.all %}
+
+                <div class="version-box commentaire-box">
+
+                    <div class="commentaire-content">
+                        <div>
+                            <strong>{{ commentaire.utilisateur }}</strong>
+
+                            <p>
+                                {{ commentaire.contenu_com }}
+                            </p>
+                        </div>
+
+                        {% if est_proprietaire or permission_user == 'commentaire' or permission_user == 'edition' %}
+                            <div class="commentaire-actions">
+                                <a href="{% url 'commentaire_modifier' commentaire.pk %}"
+                                   class="icon-link edit-icon"
+                                   title="Modifier le commentaire">
+                                    ✏️
+                                </a>
+
+                                <a href="{% url 'commentaire_supprimer' commentaire.pk %}"
+                                   class="icon-link delete-icon"
+                                   title="Supprimer le commentaire">
+                                    🗑️
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucun collaborateur pour cette note.</p>
-    {% endif %}
-</div>
-<!-- code oumaima --><!--modifier-->
-<div class="note-item">
 
-    <h2>Commentaires</h2>
-
-    {% if note.commentaires.all %}
-
-        {% for commentaire in note.commentaires.all %}
-
-            <div class="version-box commentaire-box">
-
-                <div class="commentaire-content">
-                    <div>
-                        <strong>{{ commentaire.utilisateur }}</strong>
-
-                        <p>
-                            {{ commentaire.contenu_com }}
-                        </p>
-                    </div>
-
-                    <div class="commentaire-actions">
-                        <a href="{% url 'commentaire_modifier' commentaire.pk %}"
-                           class="icon-link edit-icon"
-                           title="Modifier le commentaire">
-                            ✏️
-                        </a>
-
-                        <a href="{% url 'commentaire_supprimer' commentaire.pk %}"
-                           class="icon-link delete-icon"
-                           title="Supprimer le commentaire">
-                            🗑️
-                        </a>
-                    </div>
                 </div>
 
+            {% endfor %}
+
+        {% else %}
+
+            <p>Aucun commentaire</p>
+
+        {% endif %}
+
+        <br>
+
+        {% if est_proprietaire or permission_user == 'commentaire' or permission_user == 'edition' %}
+            <div class="actions">
+                <a href="{% url 'ajouter_commentaire' note.id %}"
+                   class="btn btn-primary">
+                    Ajouter commentaire
+                </a>
             </div>
+        {% endif %}
 
-        {% endfor %}
-
-    {% else %}
-
-        <p>Aucun commentaire</p>
-
-    {% endif %}
-
-    <br>
-
-    <div class="actions">
-        <a href="{% url 'ajouter_commentaire' note.id %}"
-           class="btn btn-primary">
-            Ajouter commentaire
-        </a>
     </div>
 
 </div>

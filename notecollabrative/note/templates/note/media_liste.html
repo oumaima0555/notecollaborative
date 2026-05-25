@@ -14,71 +14,93 @@
 
     <div class="actions">
         {% if est_proprietaire or permission_user == 'edition' %}
-    <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
-        Ajouter média
-    </a>
-       {% endif %}
+            <a href="{% url 'media_ajouter' note.id %}" class="btn btn-success">
+                Ajouter média
+            </a>
+        {% endif %}
+
         <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
             Retour à la note
         </a>
     </div>
 
     <br>
-<h2>Médias intégrés dans la note</h2>
 
-{% if liens_internes or medias_internes %}
+    <h2>Médias intégrés dans la note</h2>
 
-    {% for lien in liens_internes %}
-        <div class="note-item">
-            <p>
-                <strong>Type :</strong> lien intégré
-            </p>
+    {% if liens_internes or medias_internes %}
 
-            <p>
-                <strong>Lien :</strong>
-                <a href="{{ lien }}" target="_blank">{{ lien }}</a>
-            </p>
-        </div>
-    {% endfor %}
-
-    {% for media in medias_internes %}
-        <div class="note-item">
-            <p>
-                <strong>Type :</strong> {{ media.type }}
-            </p>
-
-            {% if media.image %}
+        {% for lien in liens_internes %}
+            <div class="note-item" style="overflow:hidden; box-sizing:border-box;">
                 <p>
-                    <strong>Image :</strong><br>
-                    <img src="{{ media.image.url }}" alt="image média" style="max-width: 350px; border-radius: 10px;">
+                    <strong>Type :</strong> lien intégré
                 </p>
-            {% endif %}
 
-            {% if media.url %}
                 <p>
                     <strong>Lien :</strong>
-                    <a href="{{ media.url }}" target="_blank">{{ media.url }}</a>
+                    <a href="{{ lien }}"
+                       target="_blank"
+                       title="{{ lien }}"
+                       style="display:inline-block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:bottom;">
+                        {{ lien }}
+                    </a>
                 </p>
-            {% endif %}
+            </div>
+        {% endfor %}
 
-            <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
-                Supprimer média
-            </a>
+        {% for media in medias_internes %}
+            <div class="note-item" style="overflow:hidden; box-sizing:border-box; max-width:900px; width:100%;">
+
+                <p>
+                    <strong>Type :</strong> {{ media.type }}
+                </p>
+
+                {% if media.url %}
+                    <p>
+                        <strong>Lien :</strong>
+                        <a href="{{ media.url }}"
+                           target="_blank"
+                           title="{{ media.url }}"
+                           style="display:inline-block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:bottom;">
+                            {{ media.url }}
+                        </a>
+                    </p>
+                {% endif %}
+
+                {% if media.image %}
+                    <p>
+                        <strong>Image :</strong>
+                    </p>
+
+                    <div style="width:100%; max-width:100%; overflow:hidden; border-radius:12px;">
+                        <img src="{{ media.image.url }}"
+                             alt="image média"
+                             style="display:block; width:100%; max-width:100%; height:auto; border-radius:12px; object-fit:contain;">
+                    </div>
+                {% endif %}
+
+                {% if est_proprietaire or permission_user == 'edition' %}
+                    <br>
+                    <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
+                        Supprimer média
+                    </a>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="note-item">
+            <p>Aucun média intégré dans la note.</p>
         </div>
-    {% endfor %}
-
-{% else %}
-    <div class="note-item">
-        <p>Aucun média intégré dans la note.</p>
-    </div>
-{% endif %}
+    {% endif %}
 
     <br>
 
     <h2>Médias supplémentaires</h2>
 
     {% for media in medias_supplementaires %}
-        <div class="note-item">
+        <div class="note-item" style="overflow:hidden; box-sizing:border-box; max-width:900px; width:100%;">
 
             <p>
                 <strong>Type :</strong> {{ media.type }}
@@ -87,20 +109,33 @@
             {% if media.url %}
                 <p>
                     <strong>Lien :</strong>
-                    <a href="{{ media.url }}" target="_blank">{{ media.url }}</a>
+                    <a href="{{ media.url }}"
+                       target="_blank"
+                       title="{{ media.url }}"
+                       style="display:inline-block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:bottom;">
+                        {{ media.url }}
+                    </a>
                 </p>
             {% endif %}
 
             {% if media.image %}
                 <p>
-                    <strong>Image :</strong><br>
-                    <img src="{{ media.image.url }}" alt="image média" style="max-width: 350px; border-radius: 10px;">
+                    <strong>Image :</strong>
                 </p>
+
+                <div style="width:100%; max-width:100%; overflow:hidden; border-radius:12px;">
+                    <img src="{{ media.image.url }}"
+                         alt="image média"
+                         style="display:block; width:100%; max-width:100%; height:auto; border-radius:12px; object-fit:contain;">
+                </div>
             {% endif %}
 
-            <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
-                Supprimer média
-            </a>
+            {% if est_proprietaire or permission_user == 'edition' %}
+                <br>
+                <a href="{% url 'media_supprimer' media.id %}" class="btn btn-danger">
+                    Supprimer média
+                </a>
+            {% endif %}
 
         </div>
     {% empty %}

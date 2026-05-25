@@ -499,3 +499,110 @@ a:hover {
 .commentaire-actions .delete-icon {
     background-color: #ff7d86;
 }
+/* ========================= */
+/* PAGE MEDIAS */
+/* ========================= */
+
+.media-card-content {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.media-link {
+    display: inline-block;
+    max-width: 650px;
+    vertical-align: bottom;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    color: #8b0f1a;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.media-link:hover {
+    color: #ff4f8b;
+}
+
+.media-image {
+    max-width: 350px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    margin-top: 10px;
+    object-fit: contain;
+}
+
+.note-item {
+    overflow: hidden;
+}
+/* ========================= */
+/* PAGE MEDIAS - CORRECTION IMAGE */
+/* ========================= */
+
+.media-card-content {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.media-image-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+.media-image {
+    display: block;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+/* Pour empêcher toutes les images de sortir du cadre */
+.note-item img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+}
+
+/* Pour garder la carte blanche propre */
+.note-item {
+    overflow: hidden !important;
+    box-sizing: border-box;
+}
+
+/* Lien long avec ... */
+.media-link {
+    display: inline-block;
+    max-width: 650px;
+    vertical-align: bottom;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #8b0f1a;
+    text-decoration: underline;
+    font-weight: 700;
+}
+/* Correction forte pour les images des médias */
+.note-item {
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.note-item img,
+.media-image {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    border-radius: 12px !important;
+}

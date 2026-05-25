@@ -11,13 +11,17 @@ from reportlab.lib.pagesizes import A4
 import re
 from tag.models import Tag
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-#aicha
 from notification.models import Notification
- 
 
 
 User = get_user_model()
+
+
+def nom_utilisateur(user):
+    if user.get_full_name():
+        return user.get_full_name()
+    return user.username
+
 
 @login_required
 def note_liste(request):
@@ -32,6 +36,7 @@ def note_liste(request):
     return render(request, 'note/note_liste.html', {
         'notes': notes
     })
+
 
 def recherche_notes(request):
     titre = request.GET.get('titre', '')
@@ -60,6 +65,7 @@ def recherche_notes(request):
         'tag_id': tag_id,
     })
 
+
 def exporter_markdown(request, note_id):
     note = get_object_or_404(Note, id=note_id)
 
@@ -81,6 +87,7 @@ def exporter_markdown(request, note_id):
     response = HttpResponse(markdown_content, content_type='text/markdown; charset=utf-8')
     response['Content-Disposition'] = f'attachment; filename="{note.titre}.md"'
     return response
+
 
 def exporter_pdf(request, note_id):
     note = get_object_or_404(Note, id=note_id)
@@ -121,7 +128,6 @@ def exporter_pdf(request, note_id):
             y = hauteur - 50
             p.setFont("Helvetica", 11)
 
-        # couper les lignes longues
         while len(ligne) > 90:
             p.drawString(50, y, ligne[:90])
             ligne = ligne[90:]
@@ -139,15 +145,11 @@ def exporter_pdf(request, note_id):
     p.save()
     return response
 
+
 @login_required
 def note_detail(request, id):
-    # Si l'utilisateur est admin, il peut voir toutes les notes
     if request.user.is_superuser:
         note = get_object_or_404(Note, id=id)
-
-    # Sinon, l'utilisateur normal voit seulement :
-    # - ses propres notes
-    # - les notes partagées avec lui
     else:
         note = get_object_or_404(
             Note.objects.filter(
@@ -156,11 +158,12 @@ def note_detail(request, id):
             id=id
         )
 
-    medias = note.medias.all()
+    # Médias internes seulement pour le détail
+    medias = note.medias.filter(est_interne=True)
+
     partages = note.partages.all()
     versions = note.versions.all().order_by('-date_modification')
 
-    # L'admin est considéré comme propriétaire pour avoir tous les boutons
     est_proprietaire = note.utilisateur == request.user or request.user.is_superuser
 
     partage_user = Partage.objects.filter(
@@ -170,14 +173,46 @@ def note_detail(request, id):
 
     permission_user = partage_user.permission if partage_user else None
 
+    # Contenu affiché dans la page détail
+    contenu_note_detail = note.contenu
+
+    # Supprimer du contenu les médias externes ajoutés depuis "Ajouter média"
+    medias_externes = note.medias.filter(est_interne=False)
+
+    for media in medias_externes:
+
+        # Si le média externe est une image
+        if media.image:
+            image_url = media.image.url
+
+            contenu_note_detail = re.sub(
+                r'<img[^>]*src=["\']' + re.escape(image_url) + r'["\'][^>]*>',
+                '',
+                contenu_note_detail
+            )
+
+        # Si le média externe est un lien
+        if media.url:
+            url = media.url
+
+            contenu_note_detail = re.sub(
+                r'<a[^>]*href=["\']' + re.escape(url) + r'["\'][^>]*>.*?</a>',
+                '',
+                contenu_note_detail
+            )
+
+            contenu_note_detail = contenu_note_detail.replace(url, '')
+
     return render(request, 'note/note_detail.html', {
         'note': note,
+        'contenu_note_detail': contenu_note_detail,
         'medias': medias,
         'partages': partages,
         'versions': versions,
         'est_proprietaire': est_proprietaire,
         'permission_user': permission_user,
     })
+
 
 @login_required
 def note_ajouter(request):
@@ -186,13 +221,9 @@ def note_ajouter(request):
 
         if form.is_valid():
             note = form.save(commit=False)
-
-            # Lier la note à l'utilisateur connecté
             note.utilisateur = request.user
-
             note.save()
 
-            # Important si tu as ajouté les tags ManyToMany
             form.save_m2m()
 
             image_note = form.cleaned_data.get('image_note')
@@ -218,13 +249,14 @@ def note_ajouter(request):
                 note=note,
                 contenu=note.contenu
             )
-            #aicha
+
             Notification.objects.create(
-               utilisateur=request.user,
-             messsage="Aicha a ajouté une nouvelle note"
-             )
+                utilisateur=request.user,
+                messsage=f"{nom_utilisateur(request.user)} a ajouté une nouvelle note"
+            )
 
             return redirect('note_liste')
+
     else:
         form = NoteForm()
 
@@ -233,21 +265,19 @@ def note_ajouter(request):
         'titre_page': 'Ajouter une note'
     })
 
+
 @login_required
 def note_modifier(request, id):
     note = get_object_or_404(Note, id=id)
 
-    # Vérifier si l'utilisateur est le propriétaire
     est_proprietaire = note.utilisateur == request.user
 
-    # Vérifier si l'utilisateur a la permission édition
     a_permission_edition = Partage.objects.filter(
         note=note,
         collaborateur=request.user,
         permission='edition'
     ).exists()
 
-    # Si ce n'est ni le propriétaire ni un collaborateur avec édition
     if not est_proprietaire and not a_permission_edition:
         messages.error(request, "Vous n'avez pas la permission de modifier cette note.")
         return redirect('note_detail', id=note.id)
@@ -284,13 +314,14 @@ def note_modifier(request, id):
                     note=note,
                     contenu=note.contenu
                 )
-                #aicha
+
                 Notification.objects.create(
-    utilisateur=request.user,
-    messsage="Aicha a modifié une note"
-)
+                    utilisateur=request.user,
+                    messsage=f"{nom_utilisateur(request.user)} a modifié une note"
+                )
 
             return redirect('note_detail', id=note.id)
+
     else:
         form = NoteForm(instance=note)
 
@@ -304,18 +335,18 @@ def note_modifier(request, id):
 def note_supprimer(request, id):
     note = get_object_or_404(Note, id=id)
 
-    # Seul le créateur/propriétaire peut supprimer la note
     if note.utilisateur != request.user:
         messages.error(request, "Vous n'avez pas la permission de supprimer cette note.")
         return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
-        note.delete()
-        #aicha
         Notification.objects.create(
-    utilisateur=request.user,
-    messsage="Aicha a supprimé une note"
-)
+            utilisateur=request.user,
+            messsage=f"{nom_utilisateur(request.user)} a supprimé une note"
+        )
+
+        note.delete()
+
         return redirect('note_liste')
 
     return render(request, 'note/note_supprimer.html', {
@@ -331,6 +362,7 @@ def version(request, note_id):
         'note': note,
         'versions': versions
     })
+
 
 @login_required
 def media_liste(request, note_id):
@@ -371,6 +403,7 @@ def media_liste(request, note_id):
         'permission_user': permission_user,
     })
 
+
 @login_required
 def media_ajouter(request, note_id):
     note = get_object_or_404(Note, id=note_id)
@@ -396,6 +429,7 @@ def media_ajouter(request, note_id):
             media.est_interne = False
             media.save()
             return redirect('note_detail', id=note.id)
+
     else:
         form = MediaForm()
 
@@ -403,6 +437,7 @@ def media_ajouter(request, note_id):
         'form': form,
         'note': note
     })
+
 
 @login_required
 def media_supprimer(request, media_id):
@@ -433,18 +468,17 @@ def media_supprimer(request, media_id):
         'note': note
     })
 
+
 @login_required
 def partage_ajouter(request, note_id):
     note = get_object_or_404(Note, id=note_id)
 
-    # Seul le propriétaire peut partager la note
     if note.utilisateur != request.user:
         messages.error(request, "Seul le propriétaire peut partager cette note.")
         return redirect('note_detail', id=note.id)
 
     if request.method == 'POST':
         form = PartageForm(request.POST)
-
         form.fields['collaborateur'].queryset = User.objects.exclude(id=request.user.id)
 
         if form.is_valid():
@@ -461,11 +495,11 @@ def partage_ajouter(request, note_id):
                 partage = form.save(commit=False)
                 partage.note = note
                 partage.save()
-                #aicha
+
                 Notification.objects.create(
-    utilisateur=collaborateur,
-    messsage=f"Aicha a partagé une note avec vous : {note.titre}"
-)
+                    utilisateur=collaborateur,
+                    messsage=f"{nom_utilisateur(request.user)} a partagé une note avec vous : {note.titre}"
+                )
 
                 messages.success(request, "La note a été partagée avec succès.")
                 return redirect('note_detail', id=note.id)
@@ -479,12 +513,12 @@ def partage_ajouter(request, note_id):
         'note': note
     })
 
+
 @login_required
 def partage_modifier(request, partage_id):
     partage = get_object_or_404(Partage, id=partage_id)
     note = partage.note
 
-    # Seul le propriétaire peut modifier les permissions
     if note.utilisateur != request.user:
         messages.error(request, "Seul le propriétaire peut modifier les permissions.")
         return redirect('note_detail', id=note.id)
@@ -507,12 +541,13 @@ def partage_modifier(request, partage_id):
         'note': note,
         'titre_page': 'Modifier la permission'
     })
+
+
 @login_required
 def partage_supprimer(request, partage_id):
     partage = get_object_or_404(Partage, id=partage_id)
     note = partage.note
 
-    # Seul le propriétaire de la note peut supprimer un partage
     if note.utilisateur != request.user:
         messages.error(request, "Seul le propriétaire peut supprimer ce partage.")
         return redirect('note_detail', id=note.id)
@@ -534,8 +569,10 @@ def partage_supprimer(request, partage_id):
         'note': note
     })
 
+
 def categorie_liste(request):
     categories = Categorie.objects.all()
+
     return render(request, 'note/categorie_liste.html', {
         'categories': categories
     })
@@ -548,12 +585,14 @@ def categorie_ajouter(request):
         if form.is_valid():
             form.save()
             return redirect('categorie_liste')
+
     else:
         form = CategorieForm()
 
     return render(request, 'note/categorie_form.html', {
         'form': form
     })
+
 
 def categorie_modifier(request, id):
     categorie = get_object_or_404(Categorie, id=id)
@@ -564,6 +603,7 @@ def categorie_modifier(request, id):
         if form.is_valid():
             form.save()
             return redirect('categorie_liste')
+
     else:
         form = CategorieForm(instance=categorie)
 
@@ -583,6 +623,7 @@ def categorie_supprimer(request, id):
     return render(request, 'note/categorie_supprimer.html', {
         'categorie': categorie
     })
+
 
 @login_required
 def collaborations_avec_moi(request):

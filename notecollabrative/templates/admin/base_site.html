@@ -76,6 +76,7 @@
         padding: 42px !important;
         width: calc(100% - 310px) !important;
         box-sizing: border-box;
+        transition: all 0.35s ease;
     }
 
     #content h1 {
@@ -93,7 +94,9 @@
     }
 
     body.login .global-admin-sidebar,
-    body.admin-login-page .global-admin-sidebar {
+    body.admin-login-page .global-admin-sidebar,
+    body.login .admin-sidebar-toggle,
+    body.admin-login-page .admin-sidebar-toggle {
         display: none !important;
     }
 
@@ -114,6 +117,7 @@
         display: flex;
         flex-direction: column;
         box-shadow: 8px 0 25px rgba(122, 27, 34, 0.18);
+        transition: transform 0.35s ease;
     }
 
     .global-sidebar-avatar {
@@ -252,6 +256,55 @@
         transform: translateY(-2px);
     }
 
+    /* ================= SIDEBAR AUTO HIDE ================= */
+
+    .admin-sidebar-toggle {
+        position: fixed;
+        top: 18px;
+        left: 22px;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--pink-main), var(--text-main));
+        color: white;
+        border: 4px solid rgba(255,255,255,0.90);
+        box-shadow: 0 12px 26px rgba(255, 79, 139, 0.35);
+        z-index: 10000;
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: 900;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.25s ease;
+    }
+
+    .admin-sidebar-toggle:hover {
+        transform: scale(1.08);
+        box-shadow: 0 16px 32px rgba(255, 79, 139, 0.45);
+    }
+
+    body.admin-sidebar-collapsed .global-admin-sidebar {
+        transform: translateX(-100%);
+    }
+
+    body.admin-sidebar-collapsed .admin-sidebar-toggle {
+        display: flex;
+    }
+
+    body.admin-sidebar-collapsed #content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-top: 85px !important;
+        padding-left: 95px !important;
+        padding-right: 42px !important;
+    }
+
+    body:not(.admin-sidebar-collapsed) #content {
+        margin-left: 310px !important;
+        width: calc(100% - 310px) !important;
+    }
+
     /* ================= STYLE DES PAGES ADMIN ================= */
 
     .module {
@@ -343,38 +396,6 @@
         padding: 12px 18px !important;
     }
 
-    #changelist {
-        background: white !important;
-        border: none !important;
-        border-radius: 22px !important;
-        overflow: hidden;
-        box-shadow: 0 14px 30px rgba(122, 27, 34, 0.08);
-    }
-
-    #changelist table thead th {
-        background: var(--text-main) !important;
-        color: white !important;
-        padding: 13px 12px !important;
-    }
-
-    #changelist table thead th a {
-        color: white !important;
-    }
-
-    #changelist table tbody td,
-    #changelist table tbody th {
-        padding: 13px 12px !important;
-        border-bottom: 1px solid var(--border) !important;
-    }
-
-    .row1 {
-        background: #ffffff !important;
-    }
-
-    .row2 {
-        background: #fff7fa !important;
-    }
-
     .object-tools a,
     .object-tools a:link,
     .object-tools a:visited {
@@ -401,18 +422,142 @@
         padding: 13px 15px !important;
     }
 
+    /* ================= TABLEAU ADMIN EN BLANC ================= */
+
+    #changelist {
+        background: white !important;
+        border: none !important;
+        border-radius: 22px !important;
+        overflow: hidden !important;
+        box-shadow: 0 14px 30px rgba(122, 27, 34, 0.08) !important;
+    }
+
+    #changelist-form {
+        background: white !important;
+    }
+
+    #changelist table {
+        background: white !important;
+        border-collapse: collapse !important;
+        width: 100% !important;
+    }
+
+    #changelist .actions {
+        background: white !important;
+        color: var(--text-main) !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding: 14px 16px !important;
+    }
+
+    #changelist .actions label {
+        color: var(--text-main) !important;
+        font-weight: 700 !important;
+    }
+
+    #changelist .actions select {
+        background: #fff7fa !important;
+        border: 2px solid var(--border) !important;
+        color: var(--text-main) !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
+    }
+
+    #changelist .actions button {
+        background: var(--pink-main) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 999px !important;
+        padding: 8px 17px !important;
+        font-weight: 900 !important;
+        cursor: pointer !important;
+    }
+
+    #changelist .actions span {
+        color: var(--text-main) !important;
+        font-weight: 700 !important;
+    }
+
+    #changelist table thead th,
+    #changelist table thead td {
+        background: #fff0f6 !important;
+        color: var(--text-main) !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding: 14px 12px !important;
+        font-weight: 900 !important;
+    }
+
+    #changelist table thead th a,
+    #changelist table thead td a {
+        color: var(--text-main) !important;
+        font-weight: 900 !important;
+    }
+
+    #changelist table tbody tr,
+    #changelist table tbody tr.row1,
+    #changelist table tbody tr.row2 {
+        background: white !important;
+    }
+
+    #changelist table tbody td,
+    #changelist table tbody th {
+        background: white !important;
+        color: var(--text-main) !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding: 14px 12px !important;
+        font-weight: 700 !important;
+    }
+
+    #changelist table tbody th a,
+    #changelist table tbody td a {
+        color: var(--pink-main) !important;
+        font-weight: 900 !important;
+        text-decoration: underline;
+    }
+
+    #changelist table tbody tr:hover td,
+    #changelist table tbody tr:hover th {
+        background: #fff7fa !important;
+    }
+
+    #changelist .paginator {
+        background: white !important;
+        color: var(--text-main) !important;
+        border-top: 1px solid var(--border) !important;
+        padding: 14px 16px !important;
+        font-weight: 800 !important;
+    }
+
+    #changelist .paginator a,
+    #changelist .paginator span {
+        background: white !important;
+        color: var(--text-main) !important;
+    }
+
+    #changelist input[type="checkbox"] {
+        accent-color: var(--pink-main);
+    }
+
+    .results {
+        background: white !important;
+    }
+
     @media (max-width: 850px) {
         .global-admin-sidebar {
             position: relative;
             width: 100%;
             min-width: 100%;
             height: auto;
+            transform: none !important;
         }
 
         #content {
             margin-left: 0 !important;
             width: 100% !important;
             padding: 24px !important;
+        }
+
+        .admin-sidebar-toggle {
+            display: none !important;
         }
     }
 </style>
@@ -522,6 +667,44 @@
 
         document.body.prepend(sidebar);
 
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "admin-sidebar-toggle";
+        toggleBtn.type = "button";
+        toggleBtn.innerHTML = "☰";
+        toggleBtn.title = "Afficher le menu";
+        document.body.prepend(toggleBtn);
+
+        document.body.classList.add("admin-sidebar-collapsed");
+
+        let sidebarTimer = null;
+
+        function showSidebar() {
+            clearTimeout(sidebarTimer);
+            document.body.classList.remove("admin-sidebar-collapsed");
+        }
+
+        function hideSidebar() {
+            sidebarTimer = setTimeout(function () {
+                document.body.classList.add("admin-sidebar-collapsed");
+            }, 250);
+        }
+
+        toggleBtn.addEventListener("mouseenter", function () {
+            showSidebar();
+        });
+
+        toggleBtn.addEventListener("click", function () {
+            showSidebar();
+        });
+
+        sidebar.addEventListener("mouseenter", function () {
+            showSidebar();
+        });
+
+        sidebar.addEventListener("mouseleave", function () {
+            hideSidebar();
+        });
+
         const dashboardLink = document.getElementById("dashboard-link");
         const notesGroup = document.getElementById("notes-group");
         const tagsGroup = document.getElementById("tags-group");
@@ -574,7 +757,19 @@
             if (href === path) {
                 link.classList.add("active");
             }
+
+            link.addEventListener("click", function () {
+                document.body.classList.add("admin-sidebar-collapsed");
+            });
         });
+
+        const logoutForm = document.querySelector(".global-sidebar-bottom form");
+
+        if (logoutForm) {
+            logoutForm.addEventListener("submit", function () {
+                document.body.classList.add("admin-sidebar-collapsed");
+            });
+        }
     });
 </script>
 {% endblock %}

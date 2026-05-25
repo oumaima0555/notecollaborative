@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer commentaire</title>
+    <link rel="stylesheet" href="{% static 'note/css/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="note-item">
+
+        <h1>Confirmation de suppression</h1>
+
+        <p>
+            Êtes-vous sûr de vouloir supprimer ce commentaire ?
+        </p>
+
+        <div class="version-box commentaire-box">
+            <p>{{ commentaire.contenu_com }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="actions">
+                <button type="submit" class="btn btn-danger">
+                    Oui, supprimer
+                </button>
+
+                <a href="{% url 'note_detail' note.id %}" class="btn btn-secondary">
+                    Annuler
+                </a>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
